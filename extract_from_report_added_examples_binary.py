@@ -24,8 +24,8 @@ allrecords ::= (  # This complex rule defines a specific structure consisting of
 
 record ::= ( # Defines the structure of a 'record', which includes an "excerpt" (that can be a string or null) and a "present" field (a boolean)
     "{"
-    ws "\"excerpt\":" ws ( string | "null" ) ","
-    ws "\"present\":" ws ("true" | "false") ws 
+    ws "\"excerpt\":" ws ( string | "null" ) "," # excerpt from text or null
+    ws "\"present\":" ws ("true" | "false") ws  #boolean: answer to specific question in prompt: symptom present yes or no?
     ws "}"
     ws
 )
