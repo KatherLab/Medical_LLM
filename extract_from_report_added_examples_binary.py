@@ -8,10 +8,10 @@ import pandas as pd
 output_json = "results-13b_binary_p1.jsonl"
 
 grammar = r"""
-root   ::= allrecords
-value  ::= object | array | string | number | ("true" | "false" | "null") ws
+root   ::= allrecords   # This line defines the starting rule, 'root',
+value  ::= object | array | string | number | ("true" | "false" | "null") ws # The 'value' rule can be an object, array, string, number, or one of the boolean literals "true" or "false", or the literal "null". Each of these is followed by whitespace (ws).
 
-allrecords ::= (
+allrecords ::= (  # This complex rule defines a specific structure consisting of a series of key-value pairs, each corresponding to different medical conditions or symptoms. Each key is followed by a 'record'.
   "{"
   ws "\"ascites\":" ws record ","
   ws "\"abdominal pain\":" ws record ","
@@ -22,7 +22,7 @@ allrecords ::= (
   ws
 )
 
-record ::= (
+record ::= ( # Defines the structure of a 'record', which includes an "excerpt" (that can be a string or null) and a "present" field (a boolean)
     "{"
     ws "\"excerpt\":" ws ( string | "null" ) ","
     ws "\"present\":" ws ("true" | "false") ws 
@@ -30,28 +30,28 @@ record ::= (
     ws
 )
 
-object ::=
+object ::= # Specifies the structure of an object, which is a set of string-value pairs enclosed in curly braces ({}). This rule allows for optional and multiple pairs.
   "{" ws (
             string ":" ws value
     ("," ws string ":" ws value)*
   )? "}" ws
 
-array  ::=
+array  ::= # Defines the structure of an array, which is a sequence of values enclosed in square brackets ([]). Values can be separated by commas.
   "[" ws (
             value
     ("," ws value)*
   )? "]" ws
 
-string ::=
+string ::= #Describes how strings are structured, including how to handle escape sequences (like \n for a newline).
   "\"" (
     [^"\\] |
     "\\" (["\\/bfnrt] | "u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F]) # escapes
   )* "\"" ws
 
-number ::= ("-"? ([0-9] | [1-9] [0-9]*)) ("." [0-9]+)? ([eE] [-+]? [0-9]+)? ws
+number ::= ("-"? ([0-9] | [1-9] [0-9]*)) ("." [0-9]+)? ([eE] [-+]? [0-9]+)? ws #Outlines the format of a number, including integers, decimals, and scientific notation.
 
 # Optional space: by convention, applied in this grammar after literal chars when allowed
-ws ::= ([ \t\n])?
+ws ::= ([ \t\n])? #This is a rule for optional whitespace, which can be a space, a tab, or a newline character. It's used throughout the grammar to allow for flexible formatting
 """
 # prompt snippets
 # Strictly give the information from the report the user requests. Strictly keep with the content of the report, do not make anything up. You will be provided with definitions, that help answering the questions. Do not answer the questions with content of the definitions. 
