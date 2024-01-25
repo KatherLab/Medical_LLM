@@ -1,0 +1,503 @@
+Table: ed_diagnosis
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: seq_num, Type: TEXT, Primary Key: 0
+  Column: icd_code, Type: TEXT, Primary Key: 0
+  Column: icd_version, Type: TEXT, Primary Key: 0
+  Column: icd_title, Type: TEXT, Primary Key: 0
+
+Table: ed_edstays
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: intime, Type: TEXT, Primary Key: 0
+  Column: outtime, Type: TEXT, Primary Key: 0
+  Column: gender, Type: TEXT, Primary Key: 0
+  Column: race, Type: TEXT, Primary Key: 0
+  Column: arrival_transport, Type: TEXT, Primary Key: 0
+  Column: disposition, Type: TEXT, Primary Key: 0
+
+Table: ed_medrecon
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: charttime, Type: TEXT, Primary Key: 0
+  Column: name, Type: TEXT, Primary Key: 0
+  Column: gsn, Type: TEXT, Primary Key: 0
+  Column: ndc, Type: TEXT, Primary Key: 0
+  Column: etc_rn, Type: TEXT, Primary Key: 0
+  Column: etccode, Type: TEXT, Primary Key: 0
+  Column: etcdescription, Type: TEXT, Primary Key: 0
+
+Table: ed_pyxis
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: charttime, Type: TEXT, Primary Key: 0
+  Column: med_rn, Type: TEXT, Primary Key: 0
+  Column: name, Type: TEXT, Primary Key: 0
+  Column: gsn_rn, Type: TEXT, Primary Key: 0
+  Column: gsn, Type: TEXT, Primary Key: 0
+
+Table: ed_triage
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: temperature, Type: TEXT, Primary Key: 0
+  Column: heartrate, Type: TEXT, Primary Key: 0
+  Column: resprate, Type: TEXT, Primary Key: 0
+  Column: o2sat, Type: TEXT, Primary Key: 0
+  Column: sbp, Type: TEXT, Primary Key: 0
+  Column: dbp, Type: TEXT, Primary Key: 0
+  Column: pain, Type: TEXT, Primary Key: 0
+  Column: acuity, Type: TEXT, Primary Key: 0
+  Column: chiefcomplaint, Type: TEXT, Primary Key: 0
+
+Table: ed_vitalsign
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: charttime, Type: TEXT, Primary Key: 0
+  Column: temperature, Type: TEXT, Primary Key: 0
+  Column: heartrate, Type: TEXT, Primary Key: 0
+  Column: resprate, Type: TEXT, Primary Key: 0
+  Column: o2sat, Type: TEXT, Primary Key: 0
+  Column: sbp, Type: TEXT, Primary Key: 0
+  Column: dbp, Type: TEXT, Primary Key: 0
+  Column: rhythm, Type: TEXT, Primary Key: 0
+  Column: pain, Type: TEXT, Primary Key: 0
+
+Table: note_radiology_detail
+  Column: note_id, Type: TEXT, Primary Key: 0
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: field_name, Type: TEXT, Primary Key: 0
+  Column: field_value, Type: TEXT, Primary Key: 0
+  Column: field_ordinal, Type: TEXT, Primary Key: 0
+
+Table: note_discharge_detail
+  Column: note_id, Type: TEXT, Primary Key: 0
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: field_name, Type: TEXT, Primary Key: 0
+  Column: field_value, Type: TEXT, Primary Key: 0
+  Column: field_ordinal, Type: TEXT, Primary Key: 0
+
+Table: hosp_admissions
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: admittime, Type: TEXT, Primary Key: 0
+  Column: dischtime, Type: TEXT, Primary Key: 0
+  Column: deathtime, Type: TEXT, Primary Key: 0
+  Column: admission_type, Type: TEXT, Primary Key: 0
+  Column: admit_provider_id, Type: TEXT, Primary Key: 0
+  Column: admission_location, Type: TEXT, Primary Key: 0
+  Column: discharge_location, Type: TEXT, Primary Key: 0
+  Column: insurance, Type: TEXT, Primary Key: 0
+  Column: language, Type: TEXT, Primary Key: 0
+  Column: marital_status, Type: TEXT, Primary Key: 0
+  Column: race, Type: TEXT, Primary Key: 0
+  Column: edregtime, Type: TEXT, Primary Key: 0
+  Column: edouttime, Type: TEXT, Primary Key: 0
+  Column: hospital_expire_flag, Type: TEXT, Primary Key: 0
+
+Table: hosp_d_hcpcs
+  Column: code, Type: TEXT, Primary Key: 0
+  Column: category, Type: TEXT, Primary Key: 0
+  Column: long_description, Type: TEXT, Primary Key: 0
+  Column: short_description, Type: TEXT, Primary Key: 0
+
+Table: hosp_d_icd_diagnoses
+  Column: icd_code, Type: TEXT, Primary Key: 0
+  Column: icd_version, Type: TEXT, Primary Key: 0
+  Column: long_title, Type: TEXT, Primary Key: 0
+
+Table: hosp_d_icd_procedures
+  Column: icd_code, Type: TEXT, Primary Key: 0
+  Column: icd_version, Type: TEXT, Primary Key: 0
+  Column: long_title, Type: TEXT, Primary Key: 0
+
+Table: hosp_d_labitems
+  Column: itemid, Type: TEXT, Primary Key: 0
+  Column: label, Type: TEXT, Primary Key: 0
+  Column: fluid, Type: TEXT, Primary Key: 0
+  Column: category, Type: TEXT, Primary Key: 0
+
+Table: hosp_drgcodes
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: drg_type, Type: TEXT, Primary Key: 0
+  Column: drg_code, Type: TEXT, Primary Key: 0
+  Column: description, Type: TEXT, Primary Key: 0
+  Column: drg_severity, Type: TEXT, Primary Key: 0
+  Column: drg_mortality, Type: TEXT, Primary Key: 0
+
+Table: hosp_emar_detail
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: emar_id, Type: TEXT, Primary Key: 0
+  Column: emar_seq, Type: TEXT, Primary Key: 0
+  Column: parent_field_ordinal, Type: TEXT, Primary Key: 0
+  Column: administration_type, Type: TEXT, Primary Key: 0
+  Column: pharmacy_id, Type: TEXT, Primary Key: 0
+  Column: barcode_type, Type: TEXT, Primary Key: 0
+  Column: reason_for_no_barcode, Type: TEXT, Primary Key: 0
+  Column: complete_dose_not_given, Type: TEXT, Primary Key: 0
+  Column: dose_due, Type: TEXT, Primary Key: 0
+  Column: dose_due_unit, Type: TEXT, Primary Key: 0
+  Column: dose_given, Type: TEXT, Primary Key: 0
+  Column: dose_given_unit, Type: TEXT, Primary Key: 0
+  Column: will_remainder_of_dose_be_given, Type: TEXT, Primary Key: 0
+  Column: product_amount_given, Type: TEXT, Primary Key: 0
+  Column: product_unit, Type: TEXT, Primary Key: 0
+  Column: product_code, Type: TEXT, Primary Key: 0
+  Column: product_description, Type: TEXT, Primary Key: 0
+  Column: product_description_other, Type: TEXT, Primary Key: 0
+  Column: prior_infusion_rate, Type: TEXT, Primary Key: 0
+  Column: infusion_rate, Type: TEXT, Primary Key: 0
+  Column: infusion_rate_adjustment, Type: TEXT, Primary Key: 0
+  Column: infusion_rate_adjustment_amount, Type: TEXT, Primary Key: 0
+  Column: infusion_rate_unit, Type: TEXT, Primary Key: 0
+  Column: route, Type: TEXT, Primary Key: 0
+  Column: infusion_complete, Type: TEXT, Primary Key: 0
+  Column: completion_interval, Type: TEXT, Primary Key: 0
+  Column: new_iv_bag_hung, Type: TEXT, Primary Key: 0
+  Column: continued_infusion_in_other_location, Type: TEXT, Primary Key: 0
+  Column: restart_interval, Type: TEXT, Primary Key: 0
+  Column: side, Type: TEXT, Primary Key: 0
+  Column: site, Type: TEXT, Primary Key: 0
+  Column: non_formulary_visual_verification, Type: TEXT, Primary Key: 0
+
+Table: hosp_emar
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: emar_id, Type: TEXT, Primary Key: 0
+  Column: emar_seq, Type: TEXT, Primary Key: 0
+  Column: poe_id, Type: TEXT, Primary Key: 0
+  Column: pharmacy_id, Type: TEXT, Primary Key: 0
+  Column: enter_provider_id, Type: TEXT, Primary Key: 0
+  Column: charttime, Type: TEXT, Primary Key: 0
+  Column: medication, Type: TEXT, Primary Key: 0
+  Column: event_txt, Type: TEXT, Primary Key: 0
+  Column: scheduletime, Type: TEXT, Primary Key: 0
+  Column: storetime, Type: TEXT, Primary Key: 0
+
+Table: hosp_hcpcsevents
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: chartdate, Type: TEXT, Primary Key: 0
+  Column: hcpcs_cd, Type: TEXT, Primary Key: 0
+  Column: seq_num, Type: TEXT, Primary Key: 0
+  Column: short_description, Type: TEXT, Primary Key: 0
+
+Table: hosp_labevents
+  Column: labevent_id, Type: TEXT, Primary Key: 0
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: specimen_id, Type: TEXT, Primary Key: 0
+  Column: itemid, Type: TEXT, Primary Key: 0
+  Column: order_provider_id, Type: TEXT, Primary Key: 0
+  Column: charttime, Type: TEXT, Primary Key: 0
+  Column: storetime, Type: TEXT, Primary Key: 0
+  Column: value, Type: TEXT, Primary Key: 0
+  Column: valuenum, Type: TEXT, Primary Key: 0
+  Column: valueuom, Type: TEXT, Primary Key: 0
+  Column: ref_range_lower, Type: TEXT, Primary Key: 0
+  Column: ref_range_upper, Type: TEXT, Primary Key: 0
+  Column: flag, Type: TEXT, Primary Key: 0
+  Column: priority, Type: TEXT, Primary Key: 0
+  Column: comments, Type: TEXT, Primary Key: 0
+
+Table: hosp_microbiologyevents
+  Column: microevent_id, Type: TEXT, Primary Key: 0
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: micro_specimen_id, Type: TEXT, Primary Key: 0
+  Column: order_provider_id, Type: TEXT, Primary Key: 0
+  Column: chartdate, Type: TEXT, Primary Key: 0
+  Column: charttime, Type: TEXT, Primary Key: 0
+  Column: spec_itemid, Type: TEXT, Primary Key: 0
+  Column: spec_type_desc, Type: TEXT, Primary Key: 0
+  Column: test_seq, Type: TEXT, Primary Key: 0
+  Column: storedate, Type: TEXT, Primary Key: 0
+  Column: storetime, Type: TEXT, Primary Key: 0
+  Column: test_itemid, Type: TEXT, Primary Key: 0
+  Column: test_name, Type: TEXT, Primary Key: 0
+  Column: org_itemid, Type: TEXT, Primary Key: 0
+  Column: org_name, Type: TEXT, Primary Key: 0
+  Column: isolate_num, Type: TEXT, Primary Key: 0
+  Column: quantity, Type: TEXT, Primary Key: 0
+  Column: ab_itemid, Type: TEXT, Primary Key: 0
+  Column: ab_name, Type: TEXT, Primary Key: 0
+  Column: dilution_text, Type: TEXT, Primary Key: 0
+  Column: dilution_comparison, Type: TEXT, Primary Key: 0
+  Column: dilution_value, Type: TEXT, Primary Key: 0
+  Column: interpretation, Type: TEXT, Primary Key: 0
+  Column: comments, Type: TEXT, Primary Key: 0
+
+Table: hosp_omr
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: chartdate, Type: TEXT, Primary Key: 0
+  Column: seq_num, Type: TEXT, Primary Key: 0
+  Column: result_name, Type: TEXT, Primary Key: 0
+  Column: result_value, Type: TEXT, Primary Key: 0
+
+Table: hosp_patients
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: gender, Type: TEXT, Primary Key: 0
+  Column: anchor_age, Type: TEXT, Primary Key: 0
+  Column: anchor_year, Type: TEXT, Primary Key: 0
+  Column: anchor_year_group, Type: TEXT, Primary Key: 0
+  Column: dod, Type: TEXT, Primary Key: 0
+
+Table: hosp_pharmacy
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: pharmacy_id, Type: TEXT, Primary Key: 0
+  Column: poe_id, Type: TEXT, Primary Key: 0
+  Column: starttime, Type: TEXT, Primary Key: 0
+  Column: stoptime, Type: TEXT, Primary Key: 0
+  Column: medication, Type: TEXT, Primary Key: 0
+  Column: proc_type, Type: TEXT, Primary Key: 0
+  Column: status, Type: TEXT, Primary Key: 0
+  Column: entertime, Type: TEXT, Primary Key: 0
+  Column: verifiedtime, Type: TEXT, Primary Key: 0
+  Column: route, Type: TEXT, Primary Key: 0
+  Column: frequency, Type: TEXT, Primary Key: 0
+  Column: disp_sched, Type: TEXT, Primary Key: 0
+  Column: infusion_type, Type: TEXT, Primary Key: 0
+  Column: sliding_scale, Type: TEXT, Primary Key: 0
+  Column: lockout_interval, Type: TEXT, Primary Key: 0
+  Column: basal_rate, Type: TEXT, Primary Key: 0
+  Column: one_hr_max, Type: TEXT, Primary Key: 0
+  Column: doses_per_24_hrs, Type: TEXT, Primary Key: 0
+  Column: duration, Type: TEXT, Primary Key: 0
+  Column: duration_interval, Type: TEXT, Primary Key: 0
+  Column: expiration_value, Type: TEXT, Primary Key: 0
+  Column: expiration_unit, Type: TEXT, Primary Key: 0
+  Column: expirationdate, Type: TEXT, Primary Key: 0
+  Column: dispensation, Type: TEXT, Primary Key: 0
+  Column: fill_quantity, Type: TEXT, Primary Key: 0
+
+Table: hosp_poe_detail
+  Column: poe_id, Type: TEXT, Primary Key: 0
+  Column: poe_seq, Type: TEXT, Primary Key: 0
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: field_name, Type: TEXT, Primary Key: 0
+  Column: field_value, Type: TEXT, Primary Key: 0
+
+Table: hosp_poe
+  Column: poe_id, Type: TEXT, Primary Key: 0
+  Column: poe_seq, Type: TEXT, Primary Key: 0
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: ordertime, Type: TEXT, Primary Key: 0
+  Column: order_type, Type: TEXT, Primary Key: 0
+  Column: order_subtype, Type: TEXT, Primary Key: 0
+  Column: transaction_type, Type: TEXT, Primary Key: 0
+  Column: discontinue_of_poe_id, Type: TEXT, Primary Key: 0
+  Column: discontinued_by_poe_id, Type: TEXT, Primary Key: 0
+  Column: order_provider_id, Type: TEXT, Primary Key: 0
+  Column: order_status, Type: TEXT, Primary Key: 0
+
+Table: hosp_prescriptions
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: pharmacy_id, Type: TEXT, Primary Key: 0
+  Column: poe_id, Type: TEXT, Primary Key: 0
+  Column: poe_seq, Type: TEXT, Primary Key: 0
+  Column: order_provider_id, Type: TEXT, Primary Key: 0
+  Column: starttime, Type: TEXT, Primary Key: 0
+  Column: stoptime, Type: TEXT, Primary Key: 0
+  Column: drug_type, Type: TEXT, Primary Key: 0
+  Column: drug, Type: TEXT, Primary Key: 0
+  Column: formulary_drug_cd, Type: TEXT, Primary Key: 0
+  Column: gsn, Type: TEXT, Primary Key: 0
+  Column: ndc, Type: TEXT, Primary Key: 0
+  Column: prod_strength, Type: TEXT, Primary Key: 0
+  Column: form_rx, Type: TEXT, Primary Key: 0
+  Column: dose_val_rx, Type: TEXT, Primary Key: 0
+  Column: dose_unit_rx, Type: TEXT, Primary Key: 0
+  Column: form_val_disp, Type: TEXT, Primary Key: 0
+  Column: form_unit_disp, Type: TEXT, Primary Key: 0
+  Column: doses_per_24_hrs, Type: TEXT, Primary Key: 0
+  Column: route, Type: TEXT, Primary Key: 0
+
+Table: hosp_services
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: transfertime, Type: TEXT, Primary Key: 0
+  Column: prev_service, Type: TEXT, Primary Key: 0
+  Column: curr_service, Type: TEXT, Primary Key: 0
+
+Table: hosp_transfers
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: transfer_id, Type: TEXT, Primary Key: 0
+  Column: eventtype, Type: TEXT, Primary Key: 0
+  Column: careunit, Type: TEXT, Primary Key: 0
+  Column: intime, Type: TEXT, Primary Key: 0
+  Column: outtime, Type: TEXT, Primary Key: 0
+
+Table: icu_chartevents
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: caregiver_id, Type: TEXT, Primary Key: 0
+  Column: charttime, Type: TEXT, Primary Key: 0
+  Column: storetime, Type: TEXT, Primary Key: 0
+  Column: itemid, Type: TEXT, Primary Key: 0
+  Column: value, Type: TEXT, Primary Key: 0
+  Column: valuenum, Type: TEXT, Primary Key: 0
+  Column: valueuom, Type: TEXT, Primary Key: 0
+  Column: warning, Type: TEXT, Primary Key: 0
+
+Table: icu_d_items
+  Column: itemid, Type: TEXT, Primary Key: 0
+  Column: label, Type: TEXT, Primary Key: 0
+  Column: abbreviation, Type: TEXT, Primary Key: 0
+  Column: linksto, Type: TEXT, Primary Key: 0
+  Column: category, Type: TEXT, Primary Key: 0
+  Column: unitname, Type: TEXT, Primary Key: 0
+  Column: param_type, Type: TEXT, Primary Key: 0
+  Column: lownormalvalue, Type: TEXT, Primary Key: 0
+  Column: highnormalvalue, Type: TEXT, Primary Key: 0
+
+Table: icu_datetimeevents
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: caregiver_id, Type: TEXT, Primary Key: 0
+  Column: charttime, Type: TEXT, Primary Key: 0
+  Column: storetime, Type: TEXT, Primary Key: 0
+  Column: itemid, Type: TEXT, Primary Key: 0
+  Column: value, Type: TEXT, Primary Key: 0
+  Column: valueuom, Type: TEXT, Primary Key: 0
+  Column: warning, Type: TEXT, Primary Key: 0
+
+Table: icu_icustays
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: first_careunit, Type: TEXT, Primary Key: 0
+  Column: last_careunit, Type: TEXT, Primary Key: 0
+  Column: intime, Type: TEXT, Primary Key: 0
+  Column: outtime, Type: TEXT, Primary Key: 0
+  Column: los, Type: TEXT, Primary Key: 0
+
+Table: icu_inputevents
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: caregiver_id, Type: TEXT, Primary Key: 0
+  Column: starttime, Type: TEXT, Primary Key: 0
+  Column: endtime, Type: TEXT, Primary Key: 0
+  Column: storetime, Type: TEXT, Primary Key: 0
+  Column: itemid, Type: TEXT, Primary Key: 0
+  Column: amount, Type: TEXT, Primary Key: 0
+  Column: amountuom, Type: TEXT, Primary Key: 0
+  Column: rate, Type: TEXT, Primary Key: 0
+  Column: rateuom, Type: TEXT, Primary Key: 0
+  Column: orderid, Type: TEXT, Primary Key: 0
+  Column: linkorderid, Type: TEXT, Primary Key: 0
+  Column: ordercategoryname, Type: TEXT, Primary Key: 0
+  Column: secondaryordercategoryname, Type: TEXT, Primary Key: 0
+  Column: ordercomponenttypedescription, Type: TEXT, Primary Key: 0
+  Column: ordercategorydescription, Type: TEXT, Primary Key: 0
+  Column: patientweight, Type: TEXT, Primary Key: 0
+  Column: totalamount, Type: TEXT, Primary Key: 0
+  Column: totalamountuom, Type: TEXT, Primary Key: 0
+  Column: isopenbag, Type: TEXT, Primary Key: 0
+  Column: continueinnextdept, Type: TEXT, Primary Key: 0
+  Column: statusdescription, Type: TEXT, Primary Key: 0
+  Column: originalamount, Type: TEXT, Primary Key: 0
+  Column: originalrate, Type: TEXT, Primary Key: 0
+
+Table: icu_outputevents
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: caregiver_id, Type: TEXT, Primary Key: 0
+  Column: charttime, Type: TEXT, Primary Key: 0
+  Column: storetime, Type: TEXT, Primary Key: 0
+  Column: itemid, Type: TEXT, Primary Key: 0
+  Column: value, Type: TEXT, Primary Key: 0
+  Column: valueuom, Type: TEXT, Primary Key: 0
+
+Table: icu_procedureevents
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: caregiver_id, Type: TEXT, Primary Key: 0
+  Column: starttime, Type: TEXT, Primary Key: 0
+  Column: endtime, Type: TEXT, Primary Key: 0
+  Column: storetime, Type: TEXT, Primary Key: 0
+  Column: itemid, Type: TEXT, Primary Key: 0
+  Column: value, Type: TEXT, Primary Key: 0
+  Column: valueuom, Type: TEXT, Primary Key: 0
+  Column: location, Type: TEXT, Primary Key: 0
+  Column: locationcategory, Type: TEXT, Primary Key: 0
+  Column: orderid, Type: TEXT, Primary Key: 0
+  Column: linkorderid, Type: TEXT, Primary Key: 0
+  Column: ordercategoryname, Type: TEXT, Primary Key: 0
+  Column: ordercategorydescription, Type: TEXT, Primary Key: 0
+  Column: patientweight, Type: TEXT, Primary Key: 0
+  Column: isopenbag, Type: TEXT, Primary Key: 0
+  Column: continueinnextdept, Type: TEXT, Primary Key: 0
+  Column: statusdescription, Type: TEXT, Primary Key: 0
+  Column: originalamount, Type: TEXT, Primary Key: 0
+  Column: originalrate, Type: TEXT, Primary Key: 0
+
+Table: icu_ingredientevents
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: stay_id, Type: TEXT, Primary Key: 0
+  Column: caregiver_id, Type: TEXT, Primary Key: 0
+  Column: starttime, Type: TEXT, Primary Key: 0
+  Column: endtime, Type: TEXT, Primary Key: 0
+  Column: storetime, Type: TEXT, Primary Key: 0
+  Column: itemid, Type: TEXT, Primary Key: 0
+  Column: amount, Type: TEXT, Primary Key: 0
+  Column: amountuom, Type: TEXT, Primary Key: 0
+  Column: rate, Type: TEXT, Primary Key: 0
+  Column: rateuom, Type: TEXT, Primary Key: 0
+  Column: orderid, Type: TEXT, Primary Key: 0
+  Column: linkorderid, Type: TEXT, Primary Key: 0
+  Column: statusdescription, Type: TEXT, Primary Key: 0
+  Column: originalamount, Type: TEXT, Primary Key: 0
+  Column: originalrate, Type: TEXT, Primary Key: 0
+
+Table: note_discharge
+  Column: note_id, Type: TEXT, Primary Key: 0
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: note_type, Type: TEXT, Primary Key: 0
+  Column: note_seq, Type: TEXT, Primary Key: 0
+  Column: charttime, Type: TEXT, Primary Key: 0
+  Column: storetime, Type: TEXT, Primary Key: 0
+  Column: text, Type: TEXT, Primary Key: 0
+
+Table: note_radiology
+  Column: note_id, Type: TEXT, Primary Key: 0
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: note_type, Type: TEXT, Primary Key: 0
+  Column: note_seq, Type: TEXT, Primary Key: 0
+  Column: charttime, Type: TEXT, Primary Key: 0
+  Column: storetime, Type: TEXT, Primary Key: 0
+  Column: text, Type: TEXT, Primary Key: 0
+
+Table: hosp_diagnoses_icd
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: seq_num, Type: TEXT, Primary Key: 0
+  Column: icd_code, Type: TEXT, Primary Key: 0
+  Column: icd_version, Type: TEXT, Primary Key: 0
+
+Table: hosp_procedures_icd
+  Column: subject_id, Type: TEXT, Primary Key: 0
+  Column: hadm_id, Type: TEXT, Primary Key: 0
+  Column: seq_num, Type: TEXT, Primary Key: 0
+  Column: chartdate, Type: TEXT, Primary Key: 0
+  Column: icd_code, Type: TEXT, Primary Key: 0
+  Column: icd_version, Type: TEXT, Primary Key: 0
+
+Table: hosp_provider
+  Column: provider_id, Type: TEXT, Primary Key: 0
+
+Table: icu_caregiver
+  Column: caregiver_id, Type: TEXT, Primary Key: 0
+

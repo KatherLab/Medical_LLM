@@ -6,6 +6,10 @@ torch==1.9.0
 # For data processing
 opencv-python==4.5.3
 scikit-learn==0.24.2
+PyPDF2==1.26.0
+paramiko==2.7.2
+tqdm==4.61.2
+requests==2.26.0
 
 # LLM related packages (these are hypothetical, ensure you use correct package names and versions)
 llama==2.0.0

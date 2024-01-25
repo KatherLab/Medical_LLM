@@ -1,0 +1,36 @@
+<!-- In results.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results</title>
+    <!-- Add CSS or JS links here -->
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Results</h1>
+        <table>
+            <thead>
+                <tr>
+                    <!-- Column Headers (change these based on your data) -->
+                    <th>Column 1</th>
+                    <th>Column 2</th>
+                    <th>Column 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data.iterrows() %}
+                <tr>
+                    <!-- Data Columns (change these based on your data) -->
+                    <td>{{ row[1]['Column1'] }}</td>
+                    <td>{{ row[1]['Column2'] }}</td>
+                    <td>{{ row[1]['Column3'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
