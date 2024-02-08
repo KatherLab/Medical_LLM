@@ -1,48 +1,38 @@
 import os
 import sqlite3
+import subprocess
+from typing import Any, Optional
+from collections.abc import Iterable
+from pathlib import Path
+import json
 
 import pandas as pd
 import paramiko
 from flask import Flask, jsonify, request, send_file, render_template
 from flask import current_app
 from flask import redirect, url_for
+import requests
 
 # import file_to_json function
 from input_parser import file_to_json
 
 app = Flask(__name__)
 
-# Directory for uploaded files
-UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'csv'}
+server_connection: Optional[subprocess.Popen[Any]] = None
+current_model = None
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 app.config['DOWNLOAD_FOLDER'] = '/home/jeff/PycharmProjects/Medical_LLM/temp_output'
 app.config['DB_PATH'] = '/home/jeff/LLM_database/mimicIV.db'
 
-# Function to check allowed file types
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def analyze_data(df, condition, icd_code, gender, birthdate, model_selection, temperature, disease_type, symptom, language, export_format):
-    # Example Analysis Logic
-    # This function should be tailored to your specific analysis requirements
-
-    # Filter by condition, ICD code, gender, etc.
-    # Example: df = df[df['condition_column'] == condition]
-
-    # Further analysis logic here
-
-    # Return processed data or results
-    return df
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
-@app.route('/upload', methods=['POST'])
-def upload():
+@app.route('/go', methods=['POST'])
+def go():
     # check if the post request has the file part
     if 'file' not in request.files:
         return "No file part in the request.", 400
@@ -53,19 +43,54 @@ def upload():
     # submit an empty part without filename
     if file.filename == '':
         return "No selected file.", 400
+    
+    model_dir = Path("/mnt/bulk/isabella/llamaproj")
+    
+    model_path = model_dir/request.form["model"]
+    assert model_path.absolute().parent == model_dir
 
-    if file and allowed_file(file.filename):
-        filename = file.filename
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
+    global server_connection, current_model
+    if current_model != request.form["model"]:
+        server_connection and server_connection.kill()
+        server_connection = subprocess.Popen([
+            "/mnt/bulk/isabella/llamaproj/llama.cpp/server",
+            "--model", str(model_path),
+            "--ctx-size", "2048",
+            "--n-gpu-layers", "100",
+            "--verbose"
+        ])
+        current_model = request.form["model"]
+    
+    df = pd.read_csv(file)
+    variables = [var.strip() for var in request.form["variables"].split(",")]
+    results = extract_from_report(df, prompt=request.form["prompt"], symptoms=variables, temperature=float(request.form["temperature"]))
+    breakpoint()
+    
 
-        # Call the file_to_json function and store the result
-        transformed_text = file_to_json(filepath)
+def extract_from_report(df: pd.DataFrame, prompt: str, symptoms: Iterable[str], temperature: float) -> dict[Any]:
+    results = {}
+    for report in df.report:
+        for symptom in symptoms:
+            while True:
+                try:
+                    result = requests.post(
+                        url="http://localhost:8080/completion",
+                        json={
+                            "prompt": prompt.format(symptom=symptom, report="".join(report)),
+                            "n_predict": 2048,
+                            "temperature": temperature,
+                        },
+                    )
+                    summary = result.json()
+                    break
+                except json.decoder.JSONDecodeError:
+                    pass
+            if report not in results:
+                results[report] = {}
+            results[report][symptom] = summary
+            breakpoint()
 
-        return transformed_text, 200
-
-    return "Invalid file type.", 400
-
+    return results
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -139,9 +164,6 @@ def postprocess_route():
     return "Postprocessing completed.", 200
 
 
-from extract_from_report import extract_from_report
-
-
 @app.route('/extract', methods=['POST'])
 def extract():
     output_json = request.form.get('output_json')
@@ -169,18 +191,34 @@ def llm_server_config():
     # Retrieve server configuration from form data
     ip_address = request.form.get('ip_address')
     user_name = request.form.get('user_name')
-    password = request.form.get('password')
+    keyfile_path = request.form.get('keyfile_path')
+    model = request.form.get('model_selection')
 
     # Validate the inputs
-    if not ip_address or not user_name or not password:
+    if not ip_address or not user_name or not keyfile_path:
         return "Error: Missing required fields", 400
-
+    
     # Establish a connection to the server
-    server_connection = ServerConnectionClass(ip_address, user_name, password)
-    try:
-        server_connection.connect()
-    except Exception as e:
-        return f"An error occurred while connecting to the server: {str(e)}", 500
+    global server_connection
+    if server_connection is not None:
+        server_connection.kill()
+    server_connection = subprocess.Popen([
+        "ssh", "-tt",
+        "-i", keyfile_path,
+        "isabella@192.168.33.114",
+        "/mnt/bulk/isabella/llamaproj/llama.cpp/server",
+        "--model", model,
+        "--ctx-size", "2048",
+        "--n-gpu-layers", "100",
+        "--verbose"
+    ])
+
+    # server_connection = ServerConnectionClass(ip_address, user_name, password)
+    
+    # try:
+    #     server_connection.connect()
+    # except Exception as e:
+    #     return f"An error occurred while connecting to the server: {str(e)}", 500
 
     # If the connection is successful, redirect to a new page or return a success message
     return "Successfully connected to the server.", 200

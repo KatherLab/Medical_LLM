@@ -10,30 +10,56 @@
 <body>
     <div class="container">
         <h1>Welcome to the Medical Report Analyzer</h1>
-        <a href="{{ url_for('db_query') }}" class="button">Go to Database Query Interface</a>
+        <!-- <a href="{{ url_for('db_query') }}" class="button">Go to Database Query Interface</a> -->
 
         <p>Select the conditions you want to analyze from medical reports.</p>
         <!-- Input type selection panel , select input form from txt or pdf-->
-        <form action="{{ url_for('analyze') }}" enctype="multipart/form-data" method="post">
+        <form action="{{ url_for('go') }}" enctype="multipart/form-data" method="post">
             <fieldset>
                 <legend>Input Type</legend>
-                <label for="input_type">Select Input Type:</label>
-                <select id="input_type" name="input_type">
-                    <option value="txt">Text</option>
-                    <option value="pdf">PDF</option>
-                    <option value="csv">CSV</option>
-                </select>
-                <!-- File Upload -->
-                <p>Upload your file for analysis:</p>
-                <input accept=".txt,.pdf,.csv" name="file" type="file">
-                <!-- button for upload file -->
-                <input type="submit" value="Upload">
+                <input accept=".csv" name="file" type="file">
             </fieldset>
+            <fieldset>
+                <legend>LLaMA Settings</legend>
+                <label for="temperature">Prompt:</label>
+                <textarea id="prompt" name="prompt">
+[INST] &lt;&lt;SYS&gt;&gt;
+Sie sind ein medizinischer Assistent von OpenAI ChatGPT. Im Folgenden finden Sie einen Bericht einer neuroradiologischen Intervention. Manchmal sind nicht alle Informationen angegeben. Wenn Informationen fehlen, geben Sie "null" an. Bitte extrahieren Sie die gesuchten Informationen aus dem Interventionsbericht.
+&lt;&lt;/SYS&gt;&gt;
+[/INST]
+Beispiel:
+Untersuchung vom 22.12.2022.
+
+Indikation: Notfallintervention ohne vorherige schriftliche Einverständniserklärung bei rechtshemisphärieller Schlaganfallsymptomatik mit CT-angiographisch nachgewiesenem prox. M2-Verschluss bei wohl thrombosiertem Aneurysma, ASPECT = 10. Thrombektomie frustran. IV Lyse erfolgt. NihSS: 5.
+
+Kam es zu einer Blutung? Ja, wenn eine Blutung oder SAB beschrieben wird. Nein, wenn im Befund steht, dass keine Blutung vorliegt.
+ASSISTANT: nein
+
+[INST]
+Das ist der Interventionsbericht:
+{report}
+
+Kam es zu einer {symptom}?
+[/INST]
+                </textarea>
+                <label for="variables">Variables (separated by commas):</label>
+                <input id="variables" name="variables"
+                        value="Headache,Cancer"
+                        type="text">
+                <label for="temperature">Temperature:</label>
+                <input type="number" id="temperature" name="temperature" step="0.01" min="0" max="1" value="0.7">
+                <label for="model">Model:</label>
+                <select name="model" id="model">
+                    <option value="llama-2-7b-chat.Q5_K_M.gguf">LLaMA 2 7b</option>
+                </select>
+            </fieldset>
+
+            <input type="submit" value="Go!!!">
         </form>
 
         <!-- TODO: backend not implemented yet -->
         <!-- Report Type Filtering Panel -->
-        <fieldset>
+        <!-- <fieldset>
             <legend>Report Type</legend>
             <label for="report_type">Select Report Type:</label>
             <select id="report_type" name="report_type">
@@ -45,52 +71,32 @@
                 <option value="operative">Operative</option>
                 <option value="other">Other</option>
             </select>
-        </fieldset>
+        </fieldset> -->
         <!-- llm server cofiguration panel -->
         <!-- ip address, user name, password -->
-        <form action="{{ url_for('llm_server_config') }}" method="post">
+        <!-- <form action="{{ url_for('llm_server_config') }}" method="post">
             <fieldset>
                 <legend>LLM Server Configuration</legend>
                 <label for="ip_address">Enter IP Address:</label>
                 <input id="ip_address" name="ip_address" placeholder="e.g., 192.168.33.112" type="text">
                 <label for="user_name">Enter User Name:</label>
                 <input id="user_name" name="user_name" placeholder="e.g., admin" type="text">
-                <label for="password">Enter Password:</label>
-                <input id="password" name="password" placeholder="e.g., password" type="password">
+                <label for="password">Path to SSH key:</label>
+                <input id="keyfile_path" name="keyfile_path" placeholder="/home/user/.ssh/id_ed25519" type="text">
+                <label for="model_selection">Select LLM Model:</label>
+                <select name="model_selection" id="model_selection">
+                    <option value="/mnt/bulk/isabella/llamaproj/llama-2-7b-chat.Q5_K_M.gguf">LLaMA 2 7b</option>
+                </select>
                 <input type="submit" value="Connect">
             </fieldset>
-        </form>
+        </form> -->
 
         <!-- TODO: backend not implemented yet -->
         <!-- LLM Model Selection Panel -->
             <fieldset>
-                <legend>LLM Model Configuration</legend>
-                <label for="model_selection">Select LLM Model:</label>
-                <select name="model_selection" id="model_selection">
-                    <option value="model_1"> LLaMA 🦙</option>
-                    <option value="model_2"> LLaMA 2 🦙🦙</option>
-                    <option value="model_3"> Falcon</option>
-                    <option value="model_4"> Alpaca</option>
-                    <option value="model_5"> GPT4All</option>
-                    <option value="model_6"> Chinese LLaMA / Alpaca and Chinese LLaMA-2 / Alpaca-2</option>
-                    <option value="model_7"> Vigogne (French)</option>
-                    <option value="model_8"> Vicuna</option>
-                    <option value="model_9"> Koala</option>
-                    <option value="model_10"> Pygmalion/Metharme</option>
-                    <option value="model_11"> WizardLM</option>
-                    <option value="model_12"> Baichuan 1 & 2 + derivations</option>
-                    <option value="model_13"> Aquila 1 & 2</option>
-                    <option value="model_14"> Starcoder models</option>
-                    <option value="model_15"> Mistral AI v0.1</option>
-                    <option value="model_16"> Refact</option>
-                    <option value="model_17"> Persimmon 8B</option>
-                    <option value="model_18"> MPT</option>
-                    <option value="model_19"> Bloom</option>
-                    <option value="model_20"> StableLM-3b-4e1t</option>
-                    <!-- Additional model options -->
-                </select>
                 <label for="temperature">Temperature:</label>
                 <input type="number" id="temperature" name="temperature" step="0.01" min="0" max="1" value="0.7">
+                <input type="submit" value="Connect">
             </fieldset>
 
 
