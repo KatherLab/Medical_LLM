@@ -1,9 +1,6 @@
-import json
 import io
-import os
 import re
 import secrets
-import sqlite3
 import subprocess
 from collections.abc import Iterable
 from concurrent import futures
@@ -45,6 +42,11 @@ def go():
     # submit an empty part without filename
     if file.filename == "":
         return "No selected file.", 400
+    
+    model_dir = Path("/mnt/bulk/isabella/llamaproj")
+    
+    model_path = model_dir/request.form["model"]
+    assert model_path.absolute().parent == model_dir
 
     df = pd.read_csv(file)
     variables = [var.strip() for var in request.form["variables"].split(",")]
