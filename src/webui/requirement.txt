@@ -1,0 +1,6 @@
+pandas
+PyPDF2
+paramiko
+flask
+requests
+tqdm
