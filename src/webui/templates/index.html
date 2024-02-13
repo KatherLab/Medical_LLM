@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,33 +8,94 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Your Page Title</title>
 </head>
+
 <body>
     <div class="container">
         <h1>Welcome to the Medical Report Analyzer</h1>
-        <a href="{{ url_for('db_query') }}" class="button">Go to Database Query Interface</a>
+<<<<<<< HEAD
+=======
+        <!-- <a href="{{ url_for('db_query') }}" class="button">Go to Database Query Interface</a> -->
+>>>>>>> origin/dev_pipeline_entity_recognition
 
         <p>Select the conditions you want to analyze from medical reports.</p>
         <!-- Input type selection panel , select input form from txt or pdf-->
-        <form action="{{ url_for('analyze') }}" enctype="multipart/form-data" method="post">
+        <form action="{{ url_for('go') }}" enctype="multipart/form-data" method="post">
             <fieldset>
                 <legend>Input Type</legend>
-                <label for="input_type">Select Input Type:</label>
-                <select id="input_type" name="input_type">
-                    <option value="txt">Text</option>
-                    <option value="pdf">PDF</option>
-                    <option value="csv">CSV</option>
-                </select>
-                <!-- File Upload -->
-                <p>Upload your file for analysis:</p>
-                <input accept=".txt,.pdf,.csv" name="file" type="file">
-                <!-- button for upload file -->
-                <input type="submit" value="Upload">
+                <input accept=".csv" name="file" type="file">
             </fieldset>
+<<<<<<< HEAD
+            <fieldset>
+                <legend>LLaMA Settings</legend>
+                <label for="temperature">Prompt:</label>
+                <textarea id="prompt" name="prompt">
+[INST] &lt;&lt;SYS&gt;&gt;
+Sie sind ein medizinischer Assistent von OpenAI ChatGPT. Im Folgenden finden Sie einen Bericht einer neuroradiologischen Intervention. Manchmal sind nicht alle Informationen angegeben. Wenn Informationen fehlen, geben Sie "null" an. Bitte extrahieren Sie die gesuchten Informationen aus dem Interventionsbericht. 
+&lt;&lt;/SYS&gt;&gt;
+[/INST]
+Beispiel: 
+Untersuchung vom 22.12.2022.
+
+Indikation: Notfallintervention ohne vorherige schriftliche Einverständniserklärung bei rechtshemisphärieller Schlaganfallsymptomatik mit CT-angiographisch nachgewiesenem prox. M2-Verschluss bei wohl thrombosiertem Aneurysma, ASPECT = 10. Thrombektomie frustran. IV Lyse erfolgt. NihSS: 5. 
+
+Kam es zu einer Blutung? Ja, wenn eine Blutung oder SAB beschrieben wird. Nein, wenn im Befund steht, dass keine Blutung vorliegt. 
+ASSISTANT: nein
+
+[INST]
+Das ist der Interventionsbericht:
+{report}
+
+Kam es zu einer {symptom}? 
+[/INST]
+                </textarea>
+
+                <label for="variables">Variables (separated by commas):</label>
+                <input id="variables" name="variables" value="Headache,Cancer" type="text">
+
+                <label for="temperature">Temperature:</label>
+                <input type="number" id="temperature" name="temperature" step="0.01" min="0" max="1" value="0.7">
+=======
+            <fieldset>
+                <legend>LLaMA Settings</legend>
+                <label for="temperature">Prompt:</label>
+                <textarea id="prompt" name="prompt">
+[INST] &lt;&lt;SYS&gt;&gt;
+Sie sind ein medizinischer Assistent von OpenAI ChatGPT. Im Folgenden finden Sie einen Bericht einer neuroradiologischen Intervention. Manchmal sind nicht alle Informationen angegeben. Wenn Informationen fehlen, geben Sie "null" an. Bitte extrahieren Sie die gesuchten Informationen aus dem Interventionsbericht.
+&lt;&lt;/SYS&gt;&gt;
+[/INST]
+Beispiel:
+Untersuchung vom 22.12.2022.
+
+Indikation: Notfallintervention ohne vorherige schriftliche Einverständniserklärung bei rechtshemisphärieller Schlaganfallsymptomatik mit CT-angiographisch nachgewiesenem prox. M2-Verschluss bei wohl thrombosiertem Aneurysma, ASPECT = 10. Thrombektomie frustran. IV Lyse erfolgt. NihSS: 5.
+
+Kam es zu einer Blutung? Ja, wenn eine Blutung oder SAB beschrieben wird. Nein, wenn im Befund steht, dass keine Blutung vorliegt.
+ASSISTANT: nein
+
+[INST]
+Das ist der Interventionsbericht:
+{report}
+
+Kam es zu einer {symptom}?
+[/INST]
+                </textarea>
+                <label for="variables">Variables (separated by commas):</label>
+                <input id="variables" name="variables"
+                        value="Headache,Cancer"
+                        type="text">
+                <label for="temperature">Temperature:</label>
+                <input type="number" id="temperature" name="temperature" step="0.01" min="0" max="1" value="0.7">
+                <label for="model">Model:</label>
+                <select name="model" id="model">
+                    <option value="llama-2-7b-chat.Q5_K_M.gguf">LLaMA 2 7b</option>
+                </select>
+            </fieldset>
+
+            <input type="submit" value="Go!!!">
         </form>
 
         <!-- TODO: backend not implemented yet -->
         <!-- Report Type Filtering Panel -->
-        <fieldset>
+        <!-- <fieldset>
             <legend>Report Type</legend>
             <label for="report_type">Select Report Type:</label>
             <select id="report_type" name="report_type">
@@ -45,166 +107,54 @@
                 <option value="operative">Operative</option>
                 <option value="other">Other</option>
             </select>
-        </fieldset>
+        </fieldset> -->
         <!-- llm server cofiguration panel -->
         <!-- ip address, user name, password -->
-        <form action="{{ url_for('llm_server_config') }}" method="post">
+        <!-- <form action="{{ url_for('llm_server_config') }}" method="post">
             <fieldset>
                 <legend>LLM Server Configuration</legend>
                 <label for="ip_address">Enter IP Address:</label>
                 <input id="ip_address" name="ip_address" placeholder="e.g., 192.168.33.112" type="text">
                 <label for="user_name">Enter User Name:</label>
                 <input id="user_name" name="user_name" placeholder="e.g., admin" type="text">
-                <label for="password">Enter Password:</label>
-                <input id="password" name="password" placeholder="e.g., password" type="password">
+                <label for="password">Path to SSH key:</label>
+                <input id="keyfile_path" name="keyfile_path" placeholder="/home/user/.ssh/id_ed25519" type="text">
+                <label for="model_selection">Select LLM Model:</label>
+                <select name="model_selection" id="model_selection">
+                    <option value="/mnt/bulk/isabella/llamaproj/llama-2-7b-chat.Q5_K_M.gguf">LLaMA 2 7b</option>
+                </select>
                 <input type="submit" value="Connect">
             </fieldset>
-        </form>
+        </form> -->
 
         <!-- TODO: backend not implemented yet -->
         <!-- LLM Model Selection Panel -->
             <fieldset>
-                <legend>LLM Model Configuration</legend>
-                <label for="model_selection">Select LLM Model:</label>
-                <select name="model_selection" id="model_selection">
-                    <option value="model_1"> LLaMA 🦙</option>
-                    <option value="model_2"> LLaMA 2 🦙🦙</option>
-                    <option value="model_3"> Falcon</option>
-                    <option value="model_4"> Alpaca</option>
-                    <option value="model_5"> GPT4All</option>
-                    <option value="model_6"> Chinese LLaMA / Alpaca and Chinese LLaMA-2 / Alpaca-2</option>
-                    <option value="model_7"> Vigogne (French)</option>
-                    <option value="model_8"> Vicuna</option>
-                    <option value="model_9"> Koala</option>
-                    <option value="model_10"> Pygmalion/Metharme</option>
-                    <option value="model_11"> WizardLM</option>
-                    <option value="model_12"> Baichuan 1 & 2 + derivations</option>
-                    <option value="model_13"> Aquila 1 & 2</option>
-                    <option value="model_14"> Starcoder models</option>
-                    <option value="model_15"> Mistral AI v0.1</option>
-                    <option value="model_16"> Refact</option>
-                    <option value="model_17"> Persimmon 8B</option>
-                    <option value="model_18"> MPT</option>
-                    <option value="model_19"> Bloom</option>
-                    <option value="model_20"> StableLM-3b-4e1t</option>
-                    <!-- Additional model options -->
-                </select>
                 <label for="temperature">Temperature:</label>
                 <input type="number" id="temperature" name="temperature" step="0.01" min="0" max="1" value="0.7">
+                <input type="submit" value="Connect">
             </fieldset>
+>>>>>>> origin/dev_pipeline_entity_recognition
 
-
-        <form action="{{ url_for('extract') }}" enctype="multipart/form-data" method="post">
-            <fieldset>
-                <legend>Extraction Configuration</legend>
-                <label for="output_json">Enter Output JSON:</label>
-                <input id="output_json" name="output_json" placeholder="e.g., results.json" type="text">
-                <label for="prompt">Enter Prompt:</label>
-                <input id="prompt" name="prompt"
-                       placeholder="e.g., You are programmed as a cooperative medical assistant. A patient report will be available to you, and users will request specific information from this report. Your responses should adhere rigorously to the information contained within the provided report, ensuring no fabrication or assumption of details not explicitly stated."
-                       type="text">
-                <label for="symptoms">Enter Symptoms:</label>
-                <input id="symptoms" name="symptoms" placeholder="e.g., Headache,Fever" type="text">
-                <input accept=".csv" name="file" type="file">
-                <input type="submit" value="Extract">
-            </fieldset>
-        </form>
-
-        <form action="{{ url_for('postprocess_route') }}" method="post">
-            <fieldset>
-                <legend>Postprocessing Configuration</legend>
-                <label for="file_path">Enter File Path:</label>
-                <input id="file_path" name="file_path" placeholder="e.g., /path/to/file.jsonl" type="text">
-                <label for="pattern">Enter Pattern:</label>
-                <input id="pattern" name="pattern" placeholder="e.g., ja|nein" type="text">
-                <label for="variable">Enter Variable:</label>
-                <input id="variable" name="variable" placeholder="e.g., variable" type="text">
-                <label for="default_pos">Enter Default Positive:</label>
-                <input id="default_pos" name="default_pos" placeholder="e.g., ja" type="text">
-                <label for="default">Enter Default:</label>
-                <input id="default" name="default" placeholder="e.g., nein" type="text">
-                <label for="csv_file_path">Enter CSV File Path:</label>
-                <input id="csv_file_path" name="csv_file_path" placeholder="e.g., /path/to/output.csv" type="text">
-                <input type="submit" value="Postprocess">
-            </fieldset>
-        </form>
-        <!-- panel for user to define the output json file, eg user can set first column as original report and second column as variable and answers  -->
-        <fieldset>
-            <legend>Output Format</legend>
-            <label for="output_format">Select Output Format:</label>
-            <select id="output_format" name="output_format">
-                <option value="json">JSON</option>
-                <option value="csv">CSV</option>
-            </select>
-            <legend>First Column</legend>
-
-            <select id="first column" name="first column">
-                <option value="original report">original report</option>
-                <option value="variable">variable</option>
-                <option value="answers">answers</option>
-            </select>
-            <legend>Second Column</legend>
-
-            <select id="second column" name="second column">
-                <option value="original report">original report</option>
-                <option value="variable">variable</option>
-                <option value="answers">answers</option>
-            </select>
-
-
-        </fieldset>
-
-        <!-- TODO: backend not implemented yet -->
-        <!-- Disease Type Filtering Panel -->
-            <fieldset>
-                <legend>Disease Type</legend>
-                <label for="disease_type">Select Disease Type:</label>
-                <select name="disease_type" id="disease_type">
-                    <option value="chronic">Chronic</option>
-                    <option value="acute">Acute</option>
-                    <option value="infectious">Infectious</option>
-                    <option value="other">Other</option>
+                <label for="model">Model:</label>
+                <select name="model" id="model">
+                    <option value="llama-2-7b-chat.Q5_K_M.gguf">LLaMA 2 7b chat</option>
+                    <option value="llama-2-70b-chat.Q5_K_M.gguf">LLaMA 2 70b chat</option>
+                    <option value="llama-2-13b-chat.Q5_K_M.gguf">LLaMA 2 13b chat</option>
+                    <option value="sauerkrautlm-70b-v1.Q5_K_M.gguf">LLaMA 2 70b chat sauerkraut</option>
+                    <option value="em_german_70b_v01.Q5_K_M.gguf">LLaMA 2 70b chat emgerman</option>
                 </select>
             </fieldset>
-
-            <!-- TODO: backend not implemented yet -->
-            <!-- Symptom Checker Panel -->
             <fieldset>
-                <legend>Symptom Checker</legend>
-                <label for="symptom">Enter Symptom:</label>
-                <input type="text" id="symptom" name="symptom" placeholder="e.g., Headache">
+                <legend>Postprocessing settings</legend>
+                <label for="pattern">Pattern:</label>
+                <input name="pattern" value="ja|nein" type="text">
+                <label for="default_answer">Default Answer:</label>
+                <input name="default_answer" value="fehlt" type="text">
             </fieldset>
 
-            <!-- Language Options Panel -->
-            <fieldset>
-                <legend>Report Language</legend>
-                <label for="language">Choose Language:</label>
-                <select name="language" id="language">
-                    <option value="english">English</option>
-                    <option value="spanish">Spanish</option>
-                    <option value="french">French</option>
-                    <!-- Additional language options -->
-                </select>
-            </fieldset>
-
-            <!-- Data Export Options Panel -->
-            <fieldset>
-                <legend>Export Format</legend>
-                <label for="export_format">Select Format:</label>
-                <select name="export_format" id="export_format">
-                    <option value="pdf">PDF</option>
-                    <option value="excel">Excel</option>
-                    <option value="csv">CSV</option>
-                </select>
-            </fieldset>
-
-            <!-- File Upload -->
-            <p>Upload your CSV file for analysis:</p>
-            <input type="file" name="file" accept=".csv">
-
-            <!-- Submit Button -->
-            <input type="submit" value="Analyze">
+            <input type="submit" value="Go!!!">
         </form>
     </div>
-</body>
+
 </html>
