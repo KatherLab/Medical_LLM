@@ -34,7 +34,8 @@ After activation, your terminal should prefix with `(venv)`, indicating that the
 
 ### 4. Install Packages
 
-Now you can install packages required for your project using pip. For this, you'll often rely on a `requirements.txt` file that lists all of your project's dependencies.
+Now you can install packages required for your project using pip. For this, you'll often rely on a `requirements.txt`
+file that lists all of your project's dependencies.
 
 For example:
 

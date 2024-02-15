@@ -3,27 +3,27 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <title>Your Page Title</title>
 </head>
 
 <body>
-    <div class="container">
-        <h1>Welcome to the Medical Report Analyzer</h1>
+<div class="container">
+    <h1>Welcome to the Medical Report Analyzer</h1>
 
-        <p>Select the conditions you want to analyze from medical reports.</p>
-        <!-- Input type selection panel , select input form from txt or pdf-->
-        <form action="{{ url_for('go') }}" enctype="multipart/form-data" method="post">
-            <fieldset>
-                <legend>Input Type</legend>
-                <input accept=".csv" name="file" type="file">
-            </fieldset>
-            <fieldset>
-                <legend>LLaMA Settings</legend>
-                <label for="temperature">Prompt:</label>
-                <textarea id="prompt" name="prompt">
+    <p>Select the conditions you want to analyze from medical reports.</p>
+    <!-- Input type selection panel , select input form from txt or pdf-->
+    <form action="{{ url_for('go') }}" enctype="multipart/form-data" method="post">
+        <fieldset>
+            <legend>Input Type</legend>
+            <input accept=".csv" name="file" type="file">
+        </fieldset>
+        <fieldset>
+            <legend>LLaMA Settings</legend>
+            <label for="temperature">Prompt:</label>
+            <textarea id="prompt" name="prompt">
 [INST] &lt;&lt;SYS&gt;&gt;
 Sie sind ein medizinischer Assistent von OpenAI ChatGPT. Im Folgenden finden Sie einen Bericht einer neuroradiologischen Intervention. Manchmal sind nicht alle Informationen angegeben. Wenn Informationen fehlen, geben Sie "null" an. Bitte extrahieren Sie die gesuchten Informationen aus dem Interventionsbericht. 
 &lt;&lt;/SYS&gt;&gt;
@@ -44,31 +44,31 @@ Kam es zu einer {symptom}?
 [/INST]
                 </textarea>
 
-                <label for="variables">Variables (separated by commas):</label>
-                <input id="variables" name="variables" value="Headache,Cancer" type="text">
+            <label for="variables">Variables (separated by commas):</label>
+            <input id="variables" name="variables" type="text" value="Headache,Cancer">
 
-                <label for="temperature">Temperature:</label>
-                <input type="number" id="temperature" name="temperature" step="0.01" min="0" max="1" value="0.7">
+            <label for="temperature">Temperature:</label>
+            <input id="temperature" max="1" min="0" name="temperature" step="0.01" type="number" value="0.7">
 
-                <label for="model">Model:</label>
-                <select name="model" id="model">
-                    <option value="llama-2-7b-chat.Q5_K_M.gguf">LLaMA 2 7b chat</option>
-                    <option value="llama-2-70b-chat.Q5_K_M.gguf">LLaMA 2 70b chat</option>
-                    <option value="llama-2-13b-chat.Q5_K_M.gguf">LLaMA 2 13b chat</option>
-                    <option value="sauerkrautlm-70b-v1.Q5_K_M.gguf">LLaMA 2 70b chat sauerkraut</option>
-                    <option value="em_german_70b_v01.Q5_K_M.gguf">LLaMA 2 70b chat emgerman</option>
-                </select>
-            </fieldset>
-            <fieldset>
-                <legend>Postprocessing settings</legend>
-                <label for="pattern">Pattern:</label>
-                <input name="pattern" value="ja|nein" type="text">
-                <label for="default_answer">Default Answer:</label>
-                <input name="default_answer" value="fehlt" type="text">
-            </fieldset>
+            <label for="model">Model:</label>
+            <select id="model" name="model">
+                <option value="llama-2-7b-chat.Q5_K_M.gguf">LLaMA 2 7b chat</option>
+                <option value="llama-2-70b-chat.Q5_K_M.gguf">LLaMA 2 70b chat</option>
+                <option value="llama-2-13b-chat.Q5_K_M.gguf">LLaMA 2 13b chat</option>
+                <option value="sauerkrautlm-70b-v1.Q5_K_M.gguf">LLaMA 2 70b chat sauerkraut</option>
+                <option value="em_german_70b_v01.Q5_K_M.gguf">LLaMA 2 70b chat emgerman</option>
+            </select>
+        </fieldset>
+        <fieldset>
+            <legend>Postprocessing settings</legend>
+            <label for="pattern">Pattern:</label>
+            <input name="pattern" type="text" value="ja|nein">
+            <label for="default_answer">Default Answer:</label>
+            <input name="default_answer" type="text" value="fehlt">
+        </fieldset>
 
-            <input type="submit" value="Go!!!">
-        </form>
-    </div>
+        <input type="submit" value="Go!!!">
+    </form>
+</div>
 
 </html>

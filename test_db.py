@@ -1,4 +1,5 @@
 import sqlite3
+
 import pandas as pd
 
 # Connect to the SQLite database (make sure "mimicIII.db" is in the current directory)
@@ -18,12 +19,13 @@ print([table[0] for table in table_names])
 # left_expression COMPARISON_OPERATOR right_expression
 # COMPARISON_OPERATOR include --> LIKE, =, IN, BETWEEN, <=, <> or != etc
 # Example:
-cursor.execute("SELECT DISTINCT ICD9_CODE FROM d_icd_diagnoses WHERE LONG_TITLE LIKE '%tumor%' OR LONG_TITLE LIKE '%cancer%';")
+cursor.execute(
+    "SELECT DISTINCT ICD9_CODE FROM d_icd_diagnoses WHERE LONG_TITLE LIKE '%tumor%' OR LONG_TITLE LIKE '%cancer%';")
 cancer_icd_codes = cursor.fetchall()
 print([code[0] for code in cancer_icd_codes])
 
 # Output tables using Pandas
-print (pd.read_sql_query("SELECT * FROM cptevents LIMIT 5;",connection))
+print(pd.read_sql_query("SELECT * FROM cptevents LIMIT 5;", connection))
 
 # Close the connection
 connection.close()

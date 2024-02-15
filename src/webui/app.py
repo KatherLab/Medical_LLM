@@ -2,11 +2,11 @@ import io
 import re
 import secrets
 import subprocess
+import time
 from collections.abc import Iterable
 from concurrent import futures
 from pathlib import Path
 from typing import Any, Optional
-import time
 
 import pandas as pd
 import requests
@@ -42,10 +42,10 @@ def go():
     # submit an empty part without filename
     if file.filename == "":
         return "No selected file.", 400
-    
+
     model_dir = Path("/mnt/bulk/isabella/llamaproj")
-    
-    model_path = model_dir/request.form["model"]
+
+    model_path = model_dir / request.form["model"]
     assert model_path.absolute().parent == model_dir
 
     df = pd.read_csv(file)
@@ -89,13 +89,13 @@ def result():
 
 
 def extract_from_report(
-    df: pd.DataFrame,
-    model_name: str,
-    prompt: str,
-    symptoms: Iterable[str],
-    temperature: float,
-    pattern: str,
-    default: str,
+        df: pd.DataFrame,
+        model_name: str,
+        prompt: str,
+        symptoms: Iterable[str],
+        temperature: float,
+        pattern: str,
+        default: str,
 ) -> dict[Any]:
     # Start server with correct model if not already running
     model_dir = Path("/mnt/bulk/isabella/llamaproj")
@@ -144,7 +144,7 @@ def extract_from_report(
                     "n_predict": 2048,
                     "temperature": temperature,
                 },
-                timeout=60*5,
+                timeout=60 * 5,
             )
             summary = result.json()
             if report not in results:
@@ -178,4 +178,4 @@ def postprocess(data, pattern: str, default: str) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

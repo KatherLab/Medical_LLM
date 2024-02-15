@@ -5,35 +5,42 @@ body {
     margin: 0;
     padding: 20px;
 }
+
 .container {
     background-color: white;
     padding: 20px;
     margin: auto;
     width: 80%;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
 h1 {
     color: #333;
 }
+
 form {
     display: grid;
     grid-gap: 15px;
 }
+
 fieldset {
     border: 1px solid #ddd;
     padding: 10px;
     border-radius: 5px;
 }
+
 legend {
     padding: 0 5px;
     font-weight: bold;
     color: #555;
 }
+
 label {
     display: block;
     margin-bottom: 5px;
 }
+
 input[type="date"],
 input[type="number"],
 input[type="text"],
@@ -44,6 +51,7 @@ select {
     border: 1px solid #ddd;
     border-radius: 4px;
 }
+
 input[type="submit"] {
     background-color: #0056b3;
     color: white;
@@ -52,6 +60,7 @@ input[type="submit"] {
     border-radius: 4px;
     cursor: pointer;
 }
+
 input[type="submit"]:hover {
     background-color: #004494;
 }

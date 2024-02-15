@@ -1,7 +1,8 @@
-
 # Accessing Remote SQLite Database via SSHFS
 
-This guide explains how to set up SSHFS (SSH Filesystem) for accessing a SQLite database located on a remote server. SSHFS allows you to securely mount a remote file system over SSH, making the remote database accessible as if it were on your local file system.
+This guide explains how to set up SSHFS (SSH Filesystem) for accessing a SQLite database located on a remote server.
+SSHFS allows you to securely mount a remote file system over SSH, making the remote database accessible as if it were on
+your local file system.
 
 ## Prerequisites
 
@@ -37,7 +38,8 @@ Replace `<username>` with your SSH username and `<remote_ip>` with the IP addres
 
 ## Step 3: Access the Database
 
-After mounting, the SQLite database file located in `/mnt/sdb1/DB/` on the remote server will be accessible at `~/remote_db/` on your local machine.
+After mounting, the SQLite database file located in `/mnt/sdb1/DB/` on the remote server will be accessible
+at `~/remote_db/` on your local machine.
 
 ## Step 4: Unmount the Remote Directory
 
@@ -57,7 +59,8 @@ umount ~/remote_db
 
 ## Step 5: Update Your Flask Application (Optional)
 
-If you are accessing this database in a Flask application, update the `DB_PATH` configuration in your Flask app to point to the mounted path:
+If you are accessing this database in a Flask application, update the `DB_PATH` configuration in your Flask app to point
+to the mounted path:
 
 ```python
 app.config['DB_PATH'] = '/home/your_local_username/remote_db/your_database_file.db'

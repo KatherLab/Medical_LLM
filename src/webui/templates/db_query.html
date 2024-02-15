@@ -4,43 +4,43 @@
 <head>
     <!-- Include shared CSS file -->
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Database Query Interface</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Database Query Interface</h1>
+<div class="container">
+    <h1>Database Query Interface</h1>
 
-        <form id="queryForm">
-            <!-- Basic Patient Info Panel -->
-            <fieldset>
-                <legend>Basic patient info</legend>
+    <form id="queryForm">
+        <!-- Basic Patient Info Panel -->
+        <fieldset>
+            <legend>Basic patient info</legend>
 
-                <label for="race">Race:</label>
-                <select id="race" name="race">
-                    <!-- Options will be populated here -->
-                </select>
+            <label for="race">Race:</label>
+            <select id="race" name="race">
+                <!-- Options will be populated here -->
+            </select>
 
-                <label for="medrecon_name">Medrecon Name:</label>
-                <select id="medrecon_name" name="medrecon_name">
-                    <!-- Options will be populated here -->
-                </select>
+            <label for="medrecon_name">Medrecon Name:</label>
+            <select id="medrecon_name" name="medrecon_name">
+                <!-- Options will be populated here -->
+            </select>
 
-                <label for="pyxis_name">Pyxis Name:</label>
-                <select id="pyxis_name" name="pyxis_name">
-                    <!-- Options will be populated here -->
-                </select>
-            </fieldset>
+            <label for="pyxis_name">Pyxis Name:</label>
+            <select id="pyxis_name" name="pyxis_name">
+                <!-- Options will be populated here -->
+            </select>
+        </fieldset>
 
 
-                <!-- Dropdown for Condition Selection -->
-        <form action="/analyze" method="post" enctype="multipart/form-data">
+        <!-- Dropdown for Condition Selection -->
+        <form action="/analyze" enctype="multipart/form-data" method="post">
             <label for="condition">Choose a condition:</label>
-            <select name="condition" id="condition">
+            <select id="condition" name="condition">
                 <option value="ascites">Ascites</option>
                 <option value="abdominal_pain">Abdominal Pain</option>
                 <option value="shortness_of_breath">Shortness of Breath</option>
@@ -52,97 +52,99 @@
             <fieldset>
                 <legend>Date Range</legend>
                 <label for="start_date">Start Date:</label>
-                <input type="date" id="start_date" name="start_date">
+                <input id="start_date" name="start_date" type="date">
                 <label for="end_date">End Date:</label>
-                <input type="date" id="end_date" name="end_date">
+                <input id="end_date" name="end_date" type="date">
             </fieldset>
 
             <!-- Keyword Search Panel -->
             <fieldset>
                 <legend>Keyword Search</legend>
                 <label for="keyword">Enter keyword:</label>
-                <input type="text" id="keyword" name="keyword">
+                <input id="keyword" name="keyword" type="text">
             </fieldset>
 
-           <!-- Condition and ICD-10 Code Selection Panel -->
+            <!-- Condition and ICD-10 Code Selection Panel -->
             <fieldset>
                 <legend>Conditions and ICD-10 Codes</legend>
                 <label for="condition">Choose a condition:</label>
-                <select name="condition" id="condition">
+                <select id="condition" name="condition">
                     <!-- Conditions options here -->
                 </select>
                 <label for="icd_code">Enter ICD-10 Code:</label>
-                <input type="text" id="icd_code" name="icd_code" placeholder="e.g., A41.9">
+                <input id="icd_code" name="icd_code" placeholder="e.g., A41.9" type="text">
             </fieldset>
 
             <!-- Patient Demographics Panel -->
             <fieldset>
                 <legend>Patient Demographics</legend>
                 <label for="gender">Gender:</label>
-                <select name="gender" id="gender">
+                <select id="gender" name="gender">
                     <option value="any">Any</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="other">Other</option>
                 </select>
                 <label for="birthdate">Birth Date:</label>
-                <input type="date" id="birthdate" name="birthdate">
+                <input id="birthdate" name="birthdate" type="date">
             </fieldset>
 
-                    <button type="submit">Search</button>
+            <button type="submit">Search</button>
 
-    </form>
+        </form>
 
-    <div id="results">
-        <!-- Results will be displayed here -->
-    </div>
+        <div id="results">
+            <!-- Results will be displayed here -->
+        </div>
 
-    <script>
-        $(document).ready(function() {
-            // Populate dropdowns with unique values
-            $.getJSON('/get_unique_values', function(data) {
-                $.each(data.races, function(key, value) {
-                    $('#race').append($('<option></option>').attr('value', value).text(value));
-                });
-
-                $.each(data.medrecon_names, function(key, value) {
-                    $('#medrecon_name').append($('<option></option>').attr('value', value).text(value));
-                });
-
-                $.each(data.pyxis_names, function(key, value) {
-                    $('#pyxis_name').append($('<option></option>').attr('value', value).text(value));
-                });
-            });
-
-        function downloadText(subject_id) {
-            window.location.href = `/download_text/${subject_id}`;
-        }
-
-        // Handle form submission
-        $('#queryForm').submit(function(event) {
-            event.preventDefault();
-            var race = $('#race').val();
-            var medrecon_name = $('#medrecon_name').val();
-            var pyxis_name = $('#pyxis_name').val();
-
-            $.ajax({
-                url: '/query_subject_ids',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ race: race, medrecon_name: medrecon_name, pyxis_name: pyxis_name }),
-                success: function(subject_ids) {
-                    $('#results').empty();
-                    $.each(subject_ids, function(index, subject_id) {
-                        var downloadButton = $('<button/>', {
-                            text: 'Download Text',
-                            click: function() { downloadText(subject_id); }
-                        });
-                        $('#results').append($('<p/>').text(subject_id).append(downloadButton));
+        <script>
+            $(document).ready(function () {
+                // Populate dropdowns with unique values
+                $.getJSON('/get_unique_values', function (data) {
+                    $.each(data.races, function (key, value) {
+                        $('#race').append($('<option></option>').attr('value', value).text(value));
                     });
+
+                    $.each(data.medrecon_names, function (key, value) {
+                        $('#medrecon_name').append($('<option></option>').attr('value', value).text(value));
+                    });
+
+                    $.each(data.pyxis_names, function (key, value) {
+                        $('#pyxis_name').append($('<option></option>').attr('value', value).text(value));
+                    });
+                });
+
+                function downloadText(subject_id) {
+                    window.location.href = `/download_text/${subject_id}`;
                 }
+
+                // Handle form submission
+                $('#queryForm').submit(function (event) {
+                    event.preventDefault();
+                    var race = $('#race').val();
+                    var medrecon_name = $('#medrecon_name').val();
+                    var pyxis_name = $('#pyxis_name').val();
+
+                    $.ajax({
+                        url: '/query_subject_ids',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({race: race, medrecon_name: medrecon_name, pyxis_name: pyxis_name}),
+                        success: function (subject_ids) {
+                            $('#results').empty();
+                            $.each(subject_ids, function (index, subject_id) {
+                                var downloadButton = $('<button/>', {
+                                    text: 'Download Text',
+                                    click: function () {
+                                        downloadText(subject_id);
+                                    }
+                                });
+                                $('#results').append($('<p/>').text(subject_id).append(downloadButton));
+                            });
+                        }
+                    });
+                });
             });
-        });
-    });
-</script>
+        </script>
 </body>
 </html>

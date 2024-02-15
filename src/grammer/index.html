@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Configure Medical Grammar</title>
+    <meta charset="UTF-8">
+    <title>Configure Medical Grammar</title>
 </head>
 <body>
 
@@ -10,32 +10,32 @@
 
 <form id="grammar-form">
     <label for="features">Enter features (comma-separated):</label><br>
-    <input type="text" id="features" name="features"><br>
+    <input id="features" name="features" type="text"><br>
 
     <label for="additional_records">Enter additional records (JSON format):</label><br>
-    <textarea id="additional_records" name="additional_records" rows="4" cols="50"></textarea><br>
+    <textarea cols="50" id="additional_records" name="additional_records" rows="4"></textarea><br>
 
-    <input type="button" onclick="submitForm()" value="Update Grammar">
+    <input onclick="submitForm()" type="button" value="Update Grammar">
 </form>
 
 <script>
-function submitForm() {
-    var features = document.getElementById('features').value.split(',');
-    var additionalRecordsInput = document.getElementById('additional_records').value;
-    var additionalRecords = {};
+    function submitForm() {
+        var features = document.getElementById('features').value.split(',');
+        var additionalRecordsInput = document.getElementById('additional_records').value;
+        var additionalRecords = {};
 
-    try {
-        additionalRecords = JSON.parse(additionalRecordsInput);
-    } catch (e) {
-        alert('Invalid JSON for additional records.');
-        return;
-    }
+        try {
+            additionalRecords = JSON.parse(additionalRecordsInput);
+        } catch (e) {
+            alert('Invalid JSON for additional records.');
+            return;
+        }
 
-    var requestData = {
-        features: features,
-        additional_records: additionalRecords
-    };
+        var requestData = {
+            features: features,
+            additional_records: additionalRecords
+        };
 
-    fetch('/update-grammar', {
-        method: 'POST',
+        fetch('/update-grammar', {
+            method: 'POST',
 

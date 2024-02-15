@@ -1,1 +1,1 @@
-path="/home/jeff/LLM_database/mimicIV.db"
+path = "/home/jeff/LLM_database/mimicIV.db"

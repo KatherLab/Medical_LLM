@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, request, send_file, render_template
-import sqlite3
-from flask import current_app
 import os
+import sqlite3
+
+from flask import Flask, jsonify, request, send_file, render_template
+from flask import current_app
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = '/home/jeff/PycharmProjects/Medical_LLM/temp_output'
@@ -11,11 +12,14 @@ app.config['DB_PATH'] = '/home/jeff/LLM_database/mimicIV.db'
 @app.route('/')
 def index():
     return render_template('db_query.html')
+
+
 # Database connection
 def get_db_connection():
     conn = sqlite3.connect(current_app.config['DB_PATH'])
     conn.row_factory = sqlite3.Row
     return conn
+
 
 # Endpoint for getting unique values for dropdowns
 @app.route('/get_unique_values')
@@ -41,6 +45,7 @@ def get_unique_values():
     pyxis_names = [x['name'] for x in pyxis_names]
 
     return jsonify({'races': races, 'medrecon_names': medrecon_names, 'pyxis_names': pyxis_names})
+
 
 # Endpoint for querying unique subject_ids based on selected criteria
 @app.route('/query_subject_ids', methods=['POST'])
@@ -75,7 +80,6 @@ def query_subject_ids():
     return jsonify([x['subject_id'] for x in subject_ids])
 
 
-
 # Endpoint for downloading note_discharge text for a subject_id
 @app.route('/download_text/<subject_id>')
 def download_text(subject_id):
@@ -101,6 +105,7 @@ def download_text(subject_id):
             return "Error creating the file", 500
     else:
         return "No text found for the provided subject_id", 404
+
 
 if __name__ == '__main__':
     app.run(debug=True)
