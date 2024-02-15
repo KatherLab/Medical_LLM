@@ -140,6 +140,7 @@ def extract_from_report(
     total_reports = len(df.report)
 
     for i, report in enumerate(df.report):
+        print("parsing report: ", i)
         for symptom in symptoms:
             result = requests.post(
                 url="http://localhost:8080/completion",
@@ -156,7 +157,7 @@ def extract_from_report(
             if report not in results:
                 results[report] = {}
             results[report][symptom] = summary
-        yield f"data: {i / total_reports * 100}\n\n"
+        #yield f"data: {i / total_reports * 100}\n\n"
 
     return postprocess(results, pattern, default)
 
