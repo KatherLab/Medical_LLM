@@ -12,14 +12,20 @@
 <body>
 <div class="container">
     <h1>Welcome to the Medical Report Analyzer</h1>
+        <button onclick="window.location.href='/analysis'">Go to Analysis Page</button>
 
     <p>Select the conditions you want to analyze from medical reports.</p>
     <!-- Input type selection panel , select input form from txt or pdf-->
     <form action="{{ url_for('go') }}" enctype="multipart/form-data" method="post">
-        <fieldset>
-            <legend>Input Type</legend>
-            <input accept=".csv" name="file" type="file">
-        </fieldset>
+<fieldset>
+    <legend>Input raw reports</legend>
+    <input class="file-upload" accept=".csv,.pdf,.txt" multiple name="files" type="file">
+    <button type="button" id="merge">Merge to CSV</button>
+</fieldset>
+<fieldset>
+    <legend>Input csv for information retrieval</legend>
+    <input class="file-upload" accept=".csv" name="file" type="file">
+</fieldset>
         <fieldset>
             <legend>LLaMA Settings</legend>
             <label for="temperature">Prompt:</label>
@@ -70,5 +76,28 @@ Kam es zu einer {symptom}?
         <input type="submit" value="Go!!!">
     </form>
 </div>
+<script>
+document.getElementById('merge').addEventListener('click', function() {
+    var formData = new FormData();
+    var input = document.querySelector('input[type="file"]');
+    for (var i = 0; i < input.files.length; i++) {
+        formData.append('files', input.files[i]);
+    }
 
+    fetch('/merge', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'merged.csv';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    });
+});
+</script>
 </html>

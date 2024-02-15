@@ -7,10 +7,12 @@ from collections.abc import Iterable
 from concurrent import futures
 from pathlib import Path
 from typing import Any, Optional
+import pdfplumber
 
 import pandas as pd
 import requests
-from flask import Flask, redirect, render_template, request, send_file
+from flask import Flask, redirect, render_template, request, send_file, Response, url_for
+import PyPDF2
 
 app = Flask(__name__)
 
@@ -63,8 +65,7 @@ def go():
         default=request.form["default_answer"],
     )
 
-    return redirect(f"/result?job={job_id}")
-
+    return redirect(url_for('result'))
 
 @app.route("/result")
 def result():
@@ -72,9 +73,9 @@ def result():
     job = jobs[jobid]
 
     if job.cancelled():
-        return "Job was cancelled", 200
+        return render_template('result.html', status="Job was cancelled")
     elif job.running():
-        return "Job is running, come back later (and refresh the page)", 200
+        return render_template('result.html', status="Job is running, come back later (and refresh the page)")
     elif job.done():
         result_df = job.result()
         result_io = io.BytesIO()
@@ -87,7 +88,7 @@ def result():
             download_name=f"{jobid}.csv",
         )
     else:
-        return "Job in queue, come back later (and refresh the page)", 200
+        return render_template('result.html', status="Job in queue, come back later (and refresh the page)")
 
 
 def extract_from_report(
@@ -135,7 +136,10 @@ def extract_from_report(
             time.sleep(10)
 
     results = {}
-    for report in df.report:
+    # get the number of reports from df
+    total_reports = len(df.report)
+
+    for i, report in enumerate(df.report):
         for symptom in symptoms:
             result = requests.post(
                 url="http://localhost:8080/completion",
@@ -152,10 +156,41 @@ def extract_from_report(
             if report not in results:
                 results[report] = {}
             results[report][symptom] = summary
+        yield f"data: {i / total_reports * 100}\n\n"
 
     return postprocess(results, pattern, default)
 
+@app.route("/merge", methods=["POST"])
+def merge():
+    files = request.files.getlist("files")
+    merged_data = []
 
+    for file in files:
+        if file.filename.endswith('.csv'):
+            df = pd.read_csv(file)
+            merged_data.append(df)
+        elif file.filename.endswith('.pdf'):
+            pdf_reader = PyPDF2.PdfFileReader(file)
+            print("pdf_reader",pdf_reader.numPages)
+            print(file.filename)
+            text = ''
+            with pdfplumber.open(file) as pdf:
+                for page in pdf.pages:
+                    text += page.extract_text()
+                print("pdf",page.extract_text())
+            merged_data.append(pd.DataFrame({'report': [text]}))
+        elif file.filename.endswith('.txt'):
+            text = file.read().decode()
+            print("text", text)
+            merged_data.append(pd.DataFrame({'report': [text]}))
+
+    merged_df = pd.concat(merged_data)
+    merged_csv = merged_df.to_csv(index=False)
+    return Response(
+        merged_csv,
+        mimetype="text/csv",
+        headers={"Content-disposition": "attachment; filename=merged.csv"},
+    )
 def postprocess(data, pattern: str, default: str) -> pd.DataFrame:
     symptoms = list(next(iter(data.values())).keys())
 
@@ -178,6 +213,28 @@ def postprocess(data, pattern: str, default: str) -> pd.DataFrame:
 
     return pd.DataFrame.from_dict(result_dict)
 
+import analysis
 
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    output_csv = request.files['output_csv']
+    groundtruth_csv = request.files['groundtruth_csv']
+    variables = [var.strip() for var in request.form["variables"].split(",")]
+    plot = analysis.compare_and_plot(output_csv, groundtruth_csv, variables)
+    return send_file(plot, mimetype='image/png')
+
+@app.route('/analysis')
+def analysis_page():
+    return render_template('analysis.html')
+
+
+@app.route('/progress')
+def progress():
+    def generate():
+        for i in range(101):
+            yield f"data:{i}\n\n"
+            time.sleep(0.1)
+    return Response(generate(), mimetype='text/event-stream')
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

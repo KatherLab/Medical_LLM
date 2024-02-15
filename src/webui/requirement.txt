@@ -4,3 +4,4 @@ paramiko
 flask
 requests
 tqdm
+scikit-learn

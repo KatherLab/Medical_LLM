@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Progress</title>
+</head>
+<body>
+    <h1>Processing...</h1>
+    <progress id="progressBar" value="0" max="100"></progress>
+    <p id="status">{{ status }}</p>
+    <script>
+        var source = new EventSource("/progress");
+        source.onmessage = function(event) {
+            document.getElementById('progressBar').value = parseInt(event.data);
+        };
+    </script>
+</body>
+</html>
