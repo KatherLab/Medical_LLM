@@ -5,5 +5,3 @@ flask
 requests
 tqdm
 scikit-learn
-pdfplumber
-matplotlib

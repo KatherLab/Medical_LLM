@@ -6,7 +6,7 @@ import time
 from collections.abc import Iterable
 from concurrent import futures
 from pathlib import Path
-from typing import Any, Optional, Union, Generator
+from typing import Any, Optional
 import pdfplumber
 
 import pandas as pd
@@ -64,8 +64,8 @@ def go():
         pattern=request.form["pattern"],
         default=request.form["default_answer"],
     )
-    return redirect(url_for('result', job=job_id))
 
+    return redirect(url_for('result'))
 
 @app.route("/result")
 def result():
@@ -77,7 +77,7 @@ def result():
     elif job.running():
         return render_template('result.html', status="Job is running, come back later (and refresh the page)")
     elif job.done():
-        result_df = job.result(as_dataframe=True)
+        result_df = job.result()
         result_io = io.BytesIO()
         result_df.to_csv(result_io, index=False)
         result_io.seek(0)
@@ -99,8 +99,7 @@ def extract_from_report(
         temperature: float,
         pattern: str,
         default: str,
-        as_dataframe: bool = False
-) -> Union[Generator[str, None, None], pd.DataFrame]:
+) -> dict[Any]:
     # Start server with correct model if not already running
     model_dir = Path("/mnt/bulk/isabella/llamaproj")
 
@@ -139,8 +138,7 @@ def extract_from_report(
     results = {}
     # get the number of reports from df
     total_reports = len(df.report)
-    if as_dataframe:
-        return postprocess(results, pattern, default)
+
     for i, report in enumerate(df.report):
         for symptom in symptoms:
             result = requests.post(
