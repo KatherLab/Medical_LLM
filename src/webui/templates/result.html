@@ -9,19 +9,10 @@
     <progress id="progressBar" value="0" max="100"></progress>
     <p id="status">{{ status }}</p>
     <script>
-        function updateProgress() {
-            fetch('/progress/{{ jobid }}')
-                .then(response => response.text())
-                .then(data => {
-                    var progress = parseInt(data.split(':')[1]);
-                    document.getElementById('progressBar').value = progress;
-                    if (progress >= 3) {
-                        location.reload();
-                    }
-                });
-        }
-
-        setInterval(updateProgress, 1000);
+        var source = new EventSource("/progress");
+        source.onmessage = function(event) {
+            document.getElementById('progressBar').value = parseInt(event.data);
+        };
     </script>
 </body>
 </html>

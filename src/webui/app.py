@@ -247,17 +247,5 @@ def progress():
             yield f"data:{i}\n\n"
             time.sleep(0.1)
     return Response(generate(), mimetype='text/event-stream')
-
-
-
-@app.route("/progress/<jobid>")
-def progress(jobid: JobID):
-    progress = progress_updates.get(jobid, [])
-    if progress:
-        return progress[-1]
-    else:
-        return "data: 0\n\n"
-
-
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
