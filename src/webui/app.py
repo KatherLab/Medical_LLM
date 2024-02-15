@@ -18,6 +18,7 @@ app = Flask(__name__)
 
 server_connection: Optional[subprocess.Popen[Any]] = None
 current_model = None
+progress_updates: dict[JobID, list[str]] = {}
 
 JobID = str
 jobs: dict[JobID, futures.Future] = {}
@@ -53,7 +54,7 @@ def go():
     df = pd.read_csv(file)
     variables = [var.strip() for var in request.form["variables"].split(",")]
     job_id = secrets.token_urlsafe()
-    global jobs
+    progress_updates[job_id] = []
     jobs[job_id] = executor.submit(
         extract_from_report,
         df=df,
@@ -63,7 +64,11 @@ def go():
         temperature=float(request.form["temperature"]),
         pattern=request.form["pattern"],
         default=request.form["default_answer"],
+        jobid=job_id,
     )
+
+    return redirect(url_for('result', job=job_id))
+
 
     return redirect(url_for('result', job=job_id))
 
@@ -101,6 +106,7 @@ def extract_from_report(
         temperature: float,
         pattern: str,
         default: str,
+        jobid: JobID,
 ) -> dict[Any]:
     # Start server with correct model if not already running
     model_dir = Path("/mnt/bulk/isabella/llamaproj")
@@ -159,10 +165,9 @@ def extract_from_report(
             if report not in results:
                 results[report] = {}
             results[report][symptom] = summary
-        progress.append(f"data: {i / total_reports * 100}\n\n")
+        progress_updates[jobid].append(f"data: {i / total_reports * 100}\n\n")
 
-    return postprocess(results, pattern, default), progress
-
+    return postprocess(results, pattern, default)
 @app.route("/merge", methods=["POST"])
 def merge():
     files = request.files.getlist("files")
