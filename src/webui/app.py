@@ -68,7 +68,9 @@ def go():
 
 @app.route("/result")
 def result():
-    job = jobs[jobid := request.args.get("job")]
+    jobid = request.args.get("job")
+    job = jobs[jobid]
+
     if job.cancelled():
         return "Job was cancelled", 200
     elif job.running():
