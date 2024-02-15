@@ -77,7 +77,7 @@ def result():
     elif job.running():
         return render_template('result.html', status="Job is running, come back later (and refresh the page)")
     elif job.done():
-        result_df = job.result(as_dataframe=True)
+        result_df = job.result()
         result_io = io.BytesIO()
         result_df.to_csv(result_io, index=False)
         result_io.seek(0)
@@ -142,6 +142,7 @@ def extract_from_report(
     if as_dataframe:
         return postprocess(results, pattern, default)
     for i, report in enumerate(df.report):
+        print("parsing report: ", i)
         for symptom in symptoms:
             result = requests.post(
                 url="http://localhost:8080/completion",
@@ -158,7 +159,7 @@ def extract_from_report(
             if report not in results:
                 results[report] = {}
             results[report][symptom] = summary
-        yield f"data: {i / total_reports * 100}\n\n"
+        #yield f"data: {i / total_reports * 100}\n\n"
 
     return postprocess(results, pattern, default)
 
