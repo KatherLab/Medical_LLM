@@ -75,9 +75,9 @@ def result():
     if job.cancelled():
         return render_template('result.html', status="Job was cancelled")
     elif job.running():
-        return render_template('result.html', status="Job is running, come back later (and refresh the page)")
+        return Response(job.result()[1], mimetype='text/event-stream')
     elif job.done():
-        result_df = job.result()
+        result_df, _ = job.result()
         result_io = io.BytesIO()
         result_df.to_csv(result_io, index=False)
         result_io.seek(0)
@@ -136,8 +136,8 @@ def extract_from_report(
             time.sleep(10)
 
     results = {}
-    # get the number of reports from df
     total_reports = len(df.report)
+    progress = []
 
     for i, report in enumerate(df.report):
         print("parsing report: ", i)
@@ -157,9 +157,9 @@ def extract_from_report(
             if report not in results:
                 results[report] = {}
             results[report][symptom] = summary
-        #yield f"data: {i / total_reports * 100}\n\n"
+        progress.append(f"data: {i / total_reports * 100}\n\n")
 
-    return postprocess(results, pattern, default)
+    return postprocess(results, pattern, default), progress
 
 @app.route("/merge", methods=["POST"])
 def merge():
@@ -238,4 +238,4 @@ def progress():
             time.sleep(0.1)
     return Response(generate(), mimetype='text/event-stream')
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5002)
