@@ -65,11 +65,13 @@ def go():
         default=request.form["default_answer"],
     )
 
-    return redirect(url_for('result'))
+    return redirect(url_for('result', job=job_id))
 
 @app.route("/result")
 def result():
     jobid = request.args.get("job")
+    print(jobid)
+    print(jobs)
     job = jobs[jobid]
 
     if job.cancelled():
