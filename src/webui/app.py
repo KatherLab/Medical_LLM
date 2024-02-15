@@ -20,10 +20,6 @@ server_connection: Optional[subprocess.Popen[Any]] = None
 current_model = None
 
 JobID = str
-
-progress_updates: dict[JobID, list[str]] = {}
-
-
 jobs: dict[JobID, futures.Future] = {}
 executor = futures.ThreadPoolExecutor(1)
 
@@ -57,7 +53,7 @@ def go():
     df = pd.read_csv(file)
     variables = [var.strip() for var in request.form["variables"].split(",")]
     job_id = secrets.token_urlsafe()
-    progress_updates[job_id] = []
+    global jobs
     jobs[job_id] = executor.submit(
         extract_from_report,
         df=df,
@@ -67,27 +63,21 @@ def go():
         temperature=float(request.form["temperature"]),
         pattern=request.form["pattern"],
         default=request.form["default_answer"],
-        jobid=job_id,
     )
-
-    return redirect(url_for('result', job=job_id))
-
 
     return redirect(url_for('result', job=job_id))
 
 @app.route("/result")
 def result():
     jobid = request.args.get("job")
-    print(jobid)
-    print(jobs)
     job = jobs[jobid]
 
     if job.cancelled():
         return render_template('result.html', status="Job was cancelled")
     elif job.running():
-        return Response(job.result()[1], mimetype='text/event-stream')
+        return render_template('result.html', status="Job is running, come back later (and refresh the page)")
     elif job.done():
-        result_df, _ = job.result()
+        result_df = job.result()
         result_io = io.BytesIO()
         result_df.to_csv(result_io, index=False)
         result_io.seek(0)
@@ -109,7 +99,6 @@ def extract_from_report(
         temperature: float,
         pattern: str,
         default: str,
-        jobid: JobID,
 ) -> dict[Any]:
     # Start server with correct model if not already running
     model_dir = Path("/mnt/bulk/isabella/llamaproj")
@@ -147,8 +136,8 @@ def extract_from_report(
             time.sleep(10)
 
     results = {}
+    # get the number of reports from df
     total_reports = len(df.report)
-    progress = []
 
     for i, report in enumerate(df.report):
         print("parsing report: ", i)
@@ -168,9 +157,10 @@ def extract_from_report(
             if report not in results:
                 results[report] = {}
             results[report][symptom] = summary
-        progress_updates[jobid].append(f"data: {i / total_reports * 100}\n\n")
+        #yield f"data: {i / total_reports * 100}\n\n"
 
     return postprocess(results, pattern, default)
+
 @app.route("/merge", methods=["POST"])
 def merge():
     files = request.files.getlist("files")
@@ -248,4 +238,4 @@ def progress():
             time.sleep(0.1)
     return Response(generate(), mimetype='text/event-stream')
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    app.run(debug=True, port=5001)
