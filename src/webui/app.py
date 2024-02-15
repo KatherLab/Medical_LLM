@@ -18,9 +18,12 @@ app = Flask(__name__)
 
 server_connection: Optional[subprocess.Popen[Any]] = None
 current_model = None
-progress_updates: dict[JobID, list[str]] = {}
 
 JobID = str
+
+progress_updates: dict[JobID, list[str]] = {}
+
+
 jobs: dict[JobID, futures.Future] = {}
 executor = futures.ThreadPoolExecutor(1)
 
