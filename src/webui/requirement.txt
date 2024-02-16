@@ -6,3 +6,4 @@ requests
 tqdm
 scikit-learn
 matplotlib
+pdfplumber
