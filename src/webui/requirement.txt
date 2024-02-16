@@ -5,3 +5,4 @@ flask
 requests
 tqdm
 scikit-learn
+matplotlib
