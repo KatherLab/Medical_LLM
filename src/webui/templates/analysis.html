@@ -1,18 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <title>Your Page Title</title>
+</head>
 <body>
 <h2>Upload CSV Files</h2>
 
 <form action="/upload" method="post" enctype="multipart/form-data">
-  <label for="variables">Variables (separated by commas):</label>
-<input id="variables" name="variables" type="text" value="Headache,Cancer">
 
-  Select output CSV to upload:
-  <input type="file" name="output_csv" accept=".csv">
-  <br>
-  Select ground truth CSV/XLSX to upload:
-  <input type="file" name="groundtruth_csv" accept=".csv,.xlsx">
-  <br>
+  <fieldset>
+    <legend>  Select output CSV to upload:</legend>
+<input id="variables" name="variables" type="text" value="Headache,Cancer">
+</fieldset>
+
+  <fieldset>
+    <legend>  Select output CSV to upload:</legend>
+    <input class="file-upload" accept=".csv" name="output_csv" type="file">
+</fieldset>
+
+    <fieldset>
+    <legend>   Select ground truth CSV/XLSX to upload:</legend>
+    <input class="file-upload" accept=".csv" name="groundtruth_csv" type="file">
+</fieldset>
+
   <input type="submit" value="Upload and Analyze" name="submit">
 </form>
 </body>

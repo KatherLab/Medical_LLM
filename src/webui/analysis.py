@@ -25,10 +25,10 @@ def compare_and_plot(output_csv, groundtruth_csv, variables):
         groundtruth_variable = groundtruth_variable.map({True: 'True', False: 'False'}).fillna('Unknown')
 
         # Print for debugging; can be removed in production code
-        print("Output Variable Sample:")
-        print(output_variable.head(50))
-        print("Ground Truth Sample:")
-        print(groundtruth_variable.head(50))
+        #print("Output Variable Sample:")
+        #print(output_variable.head(50))
+        #print("Ground Truth Sample:")
+        #print(groundtruth_variable.head(50))
 
         # transfer output_variable type to boolean
         # Compute the confusion matrix with all possible labels
