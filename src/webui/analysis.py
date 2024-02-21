@@ -38,7 +38,10 @@ def compare_and_plot(output_csv, groundtruth_csv, variables):
         cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
         plt.figure()  # Create a new figure for each variable's plot to avoid overlap
-        plt.imshow(cm, interpolation='nearest', cmap=plt.cm.viridis)
+
+        # use blue color map
+        cmap = plt.cm.Blues
+        plt.imshow(cm, interpolation='nearest', cmap=cmap)
         plt.title(f'Confusion Matrix for {variable}')
         plt.colorbar()
         tick_marks = range(len(labels))

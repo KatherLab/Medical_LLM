@@ -12,7 +12,6 @@ import pdfplumber
 import pandas as pd
 import requests
 from flask import Flask, redirect, render_template, request, send_file, Response, url_for
-import PyPDF2
 
 app = Flask(__name__)
 
@@ -171,8 +170,6 @@ def merge():
             df = pd.read_csv(file)
             merged_data.append(df)
         elif file.filename.endswith('.pdf'):
-            pdf_reader = PyPDF2.PdfFileReader(file)
-            print("pdf_reader",pdf_reader.numPages)
             print(file.filename)
             text = ''
             with pdfplumber.open(file) as pdf:
