@@ -50,10 +50,14 @@ def compare_and_plot(output_csv, groundtruth_csv, variables):
         plt.tight_layout()
         plt.ylabel('True label')
         plt.xlabel('Predicted label')
-        # print the numbers on each confusion matrix square and percentage  on each confusion matrix square to the next line
-        for i in range(cm.shape[0]):
-            for j in range(cm.shape[1]):
-                plt.text(j, i, f'{cm[i, j]}\n{cm_normalized[i, j]*100:.2f}%', horizontalalignment='center', color='black')
+        # print the numbers on each confusion matrix square and percentage  on each confusion matrix square to the next line, when the backgorund is dark, the number is white, when the background is light, the number is black
+        fmt = '.2f'
+        thresh = cm.max() / 200.
+        print(thresh)
+        for i, j in enumerate(cm):
+            for k, l in enumerate(j):
+                print(cm_normalized[i][k])
+                plt.text(k, i, f'{l}\n{cm_normalized[i][k]*100:.2f}%', horizontalalignment="center", color="white" if cm_normalized[i][k] > thresh else "black")
 
 
 
