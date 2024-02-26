@@ -50,6 +50,12 @@ def compare_and_plot(output_csv, groundtruth_csv, variables):
         plt.tight_layout()
         plt.ylabel('True label')
         plt.xlabel('Predicted label')
+        # print the numbers on each confusion matrix square and percentage  on each confusion matrix square to the next line
+        for i in range(cm.shape[0]):
+            for j in range(cm.shape[1]):
+                plt.text(j, i, f'{cm[i, j]}\n{cm_normalized[i, j]*100:.2f}%', horizontalalignment='center', color='black')
+
+
 
         plot_file = BytesIO()
         plt.savefig(plot_file, format='png')
