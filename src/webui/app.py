@@ -8,7 +8,7 @@ from concurrent import futures
 from pathlib import Path
 from typing import Any, Optional
 import pdfplumber
-
+from read_strange_csv import read_and_save_csv
 import pandas as pd
 import requests
 from flask import Flask, redirect, render_template, request, send_file, Response, url_for
@@ -49,7 +49,18 @@ def go():
     model_path = model_dir / request.form["model"]
     assert model_path.absolute().parent == model_dir
 
-    df = pd.read_csv(file)
+    try:
+        df = pd.read_csv(file)
+    except pd.errors.ParserError as e:
+        # print the error message in console
+        print(e)
+        print("The error message indicates that the number of fields in line 3 of the CSV file is not as expected. This means that the CSV file is not properly formatted and needs to be fixed. Usually, this is caused by a line break in a field. The file will be fixed and then read again.")
+        # fix the file
+        fixed_file = io.BytesIO()
+        read_and_save_csv(file, fixed_file)
+        fixed_file.seek(0)
+        df = pd.read_csv(fixed_file)
+
     variables = [var.strip() for var in request.form["variables"].split(",")]
     job_id = secrets.token_urlsafe()
     global jobs
