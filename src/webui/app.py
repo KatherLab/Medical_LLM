@@ -64,19 +64,14 @@ def go():
             df = pd.read_csv(fixed_file)
     elif file.filename.endswith('.xlsx'):
         try:
-            df = pd.read_csv(file)
+            df = pd.read_excel(file)
             print(df.head())
             # ValueError: Excel file format cannot be determined, you must specify an engine manually.
         except ValueError as e:
             print(e)
             print("The error message indicates that the Excel file format cannot be determined. This means that the Excel file is not properly formatted and needs to be fixed. The file will be fixed and then read again.")
             # fix the file
-            fixed_file = io.BytesIO()
-            read_and_save_csv(file, fixed_file)
-            fixed_file.seek(0)
-            df = pd.read_csv(fixed_file)
 
-            print(df.head())
 
     variables = [var.strip() for var in request.form["variables"].split(",")]
     job_id = secrets.token_urlsafe()

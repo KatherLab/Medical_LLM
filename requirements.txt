@@ -6,6 +6,7 @@ click==8.1.7
 contourpy==1.2.0
 cryptography==42.0.5
 cycler==0.12.1
+et-xmlfile==1.1.0
 Flask==3.0.2
 fonttools==4.49.0
 idna==3.6
@@ -16,6 +17,7 @@ kiwisolver==1.4.5
 MarkupSafe==2.1.5
 matplotlib==3.8.3
 numpy==1.26.4
+openpyxl==3.1.2
 packaging==24.0
 pandas==2.2.1
 pdfminer.six==20231228
