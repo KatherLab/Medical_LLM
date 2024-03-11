@@ -51,6 +51,7 @@ def go():
 
     if file.filename.endswith('.csv'):
         try:
+            print(file)
             df = pd.read_csv(file)
         except pd.errors.ParserError as e:
             # print the error message in console
@@ -61,7 +62,7 @@ def go():
             read_and_save_csv(file, fixed_file)
             fixed_file.seek(0)
             df = pd.read_csv(fixed_file)
-    elif file.filename.endswith('.xlxs'):
+    elif file.filename.endswith('.xlsx'):
         try:
             df = pd.read_csv(file)
             print(df.head())
