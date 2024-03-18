@@ -11,7 +11,9 @@ import pdfplumber
 from read_strange_csv import read_and_save_csv
 import pandas as pd
 import requests
-from flask import Flask, redirect, render_template, request, send_file, Response, url_for
+from flask import Flask, redirect, render_template, request, send_file, Response, url_for, flash
+from flask_socketio import SocketIO
+from argparse import ArgumentParser
 
 app = Flask(__name__)
 
@@ -24,6 +26,19 @@ executor = futures.ThreadPoolExecutor(1)
 
 app.config["DOWNLOAD_FOLDER"] = "/home/jeff/PycharmProjects/Medical_LLM/temp_output"
 app.config["DB_PATH"] = "/home/jeff/LLM_database/mimicIV.db"
+app.secret_key = '789w4hriodfslu9thwioisap89p34hrbwei9pzr8w9e'
+
+socketio = SocketIO(app)
+
+parser = ArgumentParser(description="Parameters to run the KatherLab LLM Pipeline")
+parser.add_argument("--model_path", type=str, default=r"D:\LLM-Pipeline\models", help="Path where the models are stored which llama cpp can load.")
+parser.add_argument("--server_path", type=str, default=r"D:\LLM-Pipeline\llama-b2453-bin-win-cublas-cu12.2.0-x64/server.exe")
+parser.add_argument("--port", type=int, default=5001, help="On which port the Web App should be available.")
+parser.add_argument("--ctx_size", type=int, default=2048)
+parser.add_argument("--n_gpu_layers", type=int, default=100)
+parser.add_argument("--n_predict", type=int, default=2048)
+
+args = parser.parse_args()
 
 
 @app.route("/")
@@ -35,16 +50,19 @@ def index():
 def go():
     # check if the post request has the file part
     if "file" not in request.files:
-        return "No file part in the request.", 400
+        flash("No part in the post request!", "danger")
+        return redirect(url_for('index'))
 
     file = request.files["file"]
 
     # if user does not select file, browser also
     # submit an empty part without filename
     if file.filename == "":
-        return "No selected file.", 400
+        flash("No file selected!", "danger")
+        # return "No selected file.", 400
+        return redirect(url_for('index'))
 
-    model_dir = Path("/mnt/bulk/isabella/llamaproj")
+    model_dir = Path(args.model_path)
 
     model_path = model_dir / request.form["model"]
     assert model_path.absolute().parent == model_dir
@@ -71,6 +89,8 @@ def go():
             print(e)
             print("The error message indicates that the Excel file format cannot be determined. This means that the Excel file is not properly formatted and needs to be fixed. The file will be fixed and then read again.")
             # fix the file
+            flash("Excel file is not properly formatted!", "danger")
+            return redirect(url_for('index'))
 
 
     variables = [var.strip() for var in request.form["variables"].split(",")]
@@ -123,7 +143,7 @@ def extract_from_report(
         default: str,
 ) -> dict[Any]:
     # Start server with correct model if not already running
-    model_dir = Path("/mnt/bulk/isabella/llamaproj")
+    model_dir = Path(args.model_path)
 
     model_path = model_dir / model_name
     assert model_path.absolute().parent == model_dir
@@ -133,14 +153,14 @@ def extract_from_report(
         server_connection and server_connection.kill()
         server_connection = subprocess.Popen(
             [
-                "/mnt/bulk/isabella/llamaproj/llama.cpp/server",
+                args.server_path,
                 "--model",
                 str(model_path),
                 "--ctx-size",
-                "2048",
+                str(args.ctx_size),
                 "--n-gpu-layers",
-                "100",
-                "--verbose",
+                str(args.n_gpu_layers),
+                # "--verbose",
             ],
         )
         current_model = model_name
@@ -156,10 +176,21 @@ def extract_from_report(
             break
         except requests.exceptions.ConnectionError:
             time.sleep(10)
+    
+    try:
+        requests.post(
+            url="http://localhost:8080/completion",
+            json={"prompt": "foo", "n_predict": 1}
+        )
+    except requests.exceptions.ConnectionError:
+        socketio.emit('load_failed')
+        return
+    
+    socketio.emit('load_complete')
 
     results = {}
-    # get the number of reports from df
-    total_reports = len(df.report)
+
+    socketio.emit('progress_update', {'progress': 0, 'total_steps': len(df.report)})
 
     for i, report in enumerate(df.report):
         print("parsing report: ", i)
@@ -170,16 +201,20 @@ def extract_from_report(
                     "prompt": prompt.format(
                         symptom=symptom, report="".join(report)
                     ),
-                    "n_predict": 2048,
+                    "n_predict": args.n_predict,
                     "temperature": temperature,
                 },
-                timeout=60 * 5,
+                timeout=60 * 20,
             )
             summary = result.json()
             if report not in results:
                 results[report] = {}
             results[report][symptom] = summary
         #yield f"data: {i / total_reports * 100}\n\n"
+        print(f"Report {i} completed.")
+        socketio.emit('progress_update', {'progress': (i + 1) / len(df.report) * 100, 'total_steps': len(df.report)})
+
+    socketio.emit('progress_complete', {'total_steps': len(df.report)})
 
     return postprocess(results, pattern, default)
 
@@ -212,6 +247,7 @@ def merge():
         mimetype="text/csv",
         headers={"Content-disposition": "attachment; filename=merged.csv"},
     )
+
 def postprocess(data, pattern: str, default: str) -> pd.DataFrame:
     symptoms = list(next(iter(data.values())).keys())
 
@@ -257,5 +293,15 @@ def progress():
             yield f"data:{i}\n\n"
             time.sleep(0.1)
     return Response(generate(), mimetype='text/event-stream')
+
+
+@socketio.on('connect')
+def handle_connect():
+    print("Client Connected")
+
+@socketio.on('disconnect')
+def handle_connect():
+    print("Client Disconnected")
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    socketio.run(app, debug=True, port=args.port)
