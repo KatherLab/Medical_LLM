@@ -7,3 +7,4 @@ tqdm
 scikit-learn
 matplotlib
 pdfplumber
+flask-socketio
