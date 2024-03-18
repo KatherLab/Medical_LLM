@@ -3,16 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <title>Progress</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .loading-circle {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .visible {
+            display: block;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body>
-    <h1>Processing...</h1>
-    <progress id="progressBar" value="0" max="100"></progress>
-    <p id="status">{{ status }}</p>
+<body class="text-center">
+    <div class="container p-5">
+        <h1>Processing Reports</h1>
+        <div id="loading-circle" class="container">
+            <p>Loading Model ...</p>
+            <div class="loading-circle"></div>
+        </div>
+        
+        <div class="hidden" id="load_complete">
+            <div class="alert alert-success">Model loaded successfully.</div>
+        </div>
+
+        <div class="hidden" id="load_failed">
+            <div class="alert alert-danger">Model loading failed!</div>
+        </div>
+
+        <div id="progress-div" class="hidden container">
+            <p>Processing reports:</p>
+            <!-- <div id="progress-bar" style="width: 300px; border: 1px solid #ccc; margin-top: 20px;">
+                <div id="progress" style="height: 20px; background-color: #4caf50; width: 0;"></div>
+                <div id="progress-info" style="text-align: center;"></div>
+            </div> -->
+            <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1">
+                <div class="progress-bar bg-success" style="width: 0%;" id="progress-info">0/1</div>
+            </div>
+        </div>
+
+        <div id="download-div" class="hidden container">
+            <p>Download the results:</p>
+            <button type="button" class="btn btn-success" onClick="window.location.reload();">Download</button>
+        </div>
+    </div>
+    
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"></script>
     <script>
-        var source = new EventSource("/progress");
-        source.onmessage = function(event) {
-            document.getElementById('progressBar').value = parseInt(event.data);
-        };
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('load_complete', function() {
+            document.getElementById('loading-circle').classList.add('hidden');
+            document.getElementById('load_complete').classList.remove('hidden');
+            document.getElementById('progress-div').classList.remove('hidden');
+        });
+
+        socket.on('progress_update', function(data) {
+            var progress = data.progress;
+            var totalSteps = data.total_steps;
+            document.getElementById('progress-info').style.width = progress + '%';
+            document.getElementById('progress-info').innerText = (Math.floor(progress / (100/totalSteps)) + 1) + '/' + totalSteps
+        });
+
+        socket.on('progress_complete', function(data) {
+            document.getElementById('progress-info').style.width = '100%';
+            document.getElementById('progress-info').innerText = 'Processed ' + data.total_steps + ' Reports'
+            document.getElementById('download-div').classList.remove('hidden');
+            alert('Processing complete!');
+        });
+
+        socket.on('load_failed', function(){
+            document.getElementById('load_failed').classList.remove('hidden');
+            alert('Loading the model failed!')
+        });
+
+        socket.emit('start_progress', { total_steps: 100 });
     </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 </body>
 </html>
