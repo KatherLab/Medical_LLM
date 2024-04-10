@@ -1,0 +1,9 @@
+pandas
+PyPDF2
+paramiko
+flask
+requests
+tqdm
+scikit-learn
+matplotlib
+pdfplumber
